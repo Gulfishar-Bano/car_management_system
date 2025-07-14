@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1752317799678,
+    "carNo": "KA01AB1234",
+    "carTypeId": 1,
+    "brandId": 2,
+    "model": "Coro",
+    "fuelType": "Petrol",
+    "noOfSeats": 5,
+    "ac": true,
+    "description": "A reliable sedan"
+  },
+  {
+    "id": 2,
+    "carNo": "KA01AB1234",
+    "carTypeId": 1,
+    "brandId": 3,
+    "model": "Coro",
+    "fuelType": "Petrol",
+    "noOfSeats": 5,
+    "ac": true,
+    "description": "A reliable sedan"
+  },
+  {
+    "id": 4,
+    "carNo": "KA01AB1234",
+    "carTypeId": 2,
+    "brandId": 2,
+    "model": "Coro",
+    "fuelType": "Petrol",
+    "noOfSeats": 5,
+    "ac": true,
+    "description": "A reliable sedan"
+  }
+]

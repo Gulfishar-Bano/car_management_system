@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Suv"
+  },
+  {
+    "id": 2,
+    "name": "Wagon"
+  },
+  {
+    "id": 3,
+    "name": "Convertible"
+  }
+]
