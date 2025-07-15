@@ -5,33 +5,36 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './Dto/create-car.dto';
 import { UpdateCarDto } from './Dto/update-car.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
+
 @Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Get()
+  @Get('list')
   getAll() {
     return this.carService.getAll();
   }
 
-  @Get(':id')
+  @Get('view/:id')
   getOne(@Param('id') id: string) {
     return this.carService.getOne(+id);
   }
 
-  @Post()
+  @Post('create')
   create(@Body() createDto: CreateCarDto) {
     return this.carService.create(createDto);
   }
 
-  @Put(':id')
+  @Put('update/:id')
   update(@Param('id') id: string, @Body() updateDto: UpdateCarDto) {
     return this.carService.update(+id, updateDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   delete(@Param('id') id: string) {
     return this.carService.delete(+id);
   }

@@ -7,14 +7,15 @@ import { CarModule } from './car/car.module';
 import { CarTypeModule } from './car-type/car-type.module';
 import { CarBrandModule } from './car-brand/car-brand.module';
 
-import { AuthModule } from './auth/auth.module'; 
+//import { AuthModule } from './auth/auth.module'; 
+import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
 
 @Module({
   imports: [
     CarModule,
     CarTypeModule,
     CarBrandModule,
-    AuthModule, 
+    JwtAuthModule, 
   ],
   controllers: [AppController],
   providers: [AppService], 

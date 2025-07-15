@@ -45,7 +45,7 @@ export class CarService {
     }
 
     const newCar = {
-      id: Date.now(), // or you can use custom ID logic
+      id: Date.now(), 
       ...createDto,
     };
     cars.push(newCar);

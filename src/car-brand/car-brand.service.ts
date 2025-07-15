@@ -9,6 +9,7 @@ export class CarBrandService {
   
     private filePath = path.join(process.cwd(), 'src', 'car-brand', 'data', 'car-brand.json');
   private readData() {
+
     return JSON.parse(fs.readFileSync(this.filePath, 'utf8') || '[]');
   }
 
@@ -44,4 +45,6 @@ export class CarBrandService {
     this.writeData(updated);
     return { message: `Deleted brand with ID ${id}` };
   }
+
+  
 }

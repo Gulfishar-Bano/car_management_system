@@ -51,7 +51,7 @@ create(createDto: CreateTypeDto) {
     console.log('Before:', types);
     console.log('After:', updated);
   
-    this.writeData(updated); // Make sure this is actually writing to the file
+    this.writeData(updated); 
   
     return { message: `Deleted type with ID ${id}` };
   }
