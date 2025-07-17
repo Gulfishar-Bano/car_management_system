@@ -37,7 +37,7 @@ export class CarService {
 
     const car=await this.carRepo.findOneBy({id})
 
-    if(!car) throw new BadRequestException("Brand Not found")
+    if(!car) throw new BadRequestException("car not found")
 
     Object.assign(car,Dto);
     return await this.carRepo.save(car);
@@ -46,7 +46,7 @@ export class CarService {
   async Delete(id:number):Promise<string>{
     const car=await this.carRepo.findOneBy({id})
 
-    if(!car) throw new BadRequestException("Car brand not found")
+    if(!car) throw new BadRequestException("Car  not found")
 
    await this.carRepo.delete(car)
    return `the brand with id ${id} is deleted `
