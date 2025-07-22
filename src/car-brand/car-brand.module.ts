@@ -9,6 +9,7 @@ import { CarBrand } from './car_brand.entity';
   imports:[TypeOrmModule.forFeature([CarBrand]),AuthModule],
   controllers: [CarBrandController],
   providers: [CarBrandService],
+  exports:[CarBrandService]
   
 })
 export class CarBrandModule {}

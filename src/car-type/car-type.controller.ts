@@ -19,27 +19,27 @@ export class CarTypeController {
     @Get('list')
     getALl():Promise<CarType[]>
     {
-   return this.carTypeService.GetAll();
+   return this.carTypeService.getAll();
     }
   
     @Get('list/:id')
-    getById(@Param('id') id:string){
-      return this.carTypeService.GetById(+id)
+    getById(@Param('id') id:string):Promise<CarType|null>{
+      return this.carTypeService.getById(+id)
     }
 
     @Post('create')
-  Create(@Body() Dto:CreateTypeDto):Promise<CarType>{
-    return this.carTypeService.Create(Dto)
+  Create(@Body() Dto:CreateTypeDto):Promise<string>{
+    return this.carTypeService.create(Dto)
   }
 
   @Put('update/:id')
-  Update(@Param('id') id:string ,@Body() Dto:UpdateTypeDto):Promise<CarType|null>{
-   return this.carTypeService.Update(+id,Dto);
+  Update(@Param('id') id:string ,@Body() Dto:UpdateTypeDto):Promise<string>{
+   return this.carTypeService.update(+id,Dto);
   }
 
   @Delete('delete/:id')
   Delete(@Param('id') id:string):Promise<string>{
-    return this.carTypeService.Delete(+id)
+    return this.carTypeService.delete(+id)
   }
 
   

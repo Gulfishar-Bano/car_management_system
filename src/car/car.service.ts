@@ -6,57 +6,98 @@ import { Car } from './car.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CarService {
 
-  constructor(
-    @InjectRepository(Car)
-    private readonly carRepo:Repository<Car>,
+  constructor(private readonly datasource: DataSource) { }
 
-  ){}
 
+  async getAll() {
+    return await this.datasource.query(`select * from car`);
+  }
+
+  async getById(id: number):Promise<Car|null> {
+     const result=await this.datasource.query(`select * from car where id=?`, [id]);
+     return  result[0]|| null;
+  } 
+
+  async update(id: number, dto: UpdateCarDto) {
+    await this.datasource.query(`update car set carNo=? ,carTypeId=?,brandId=?,model=?,fuelType=?,noOfSeats=?,ac=?,description=? where id=?`,[dto.carNo,dto.carTypeId,dto.brandId,dto.model,dto.fuelType,dto.noOfSeats,dto.ac,dto.description,id]);
+    return `car with ${id} is updated`;
+  }
   
-  async GetAll():Promise<Car[]>{
-    return await this.carRepo.find();
+  async create(dto:CreateCarDto){
+  
+    await this.datasource.query(`insert into car(carNo,carTypeId,brandId,model,fuelType,noOfSeats,ac,description) values (?,?,?,?,?,?,?,?)`,[dto.carNo,
+     dto.carTypeId,dto.brandId,dto.model,dto.fuelType,dto.noOfSeats,dto.ac,dto.description]
+    );
+    return ` car added successfully`
   }
 
-  async GetByCarNo(id:number):Promise<Car|null>{
+  async delete(id:number){
 
-    return await this.carRepo.findOneBy({id})
-  }
 
-  async Create(Dto:CreateCarDto):Promise<Car>{
-    const newcar= this.carRepo.create(Dto)
+    const exist=await this.getById(id);
+    console.log(exist)
+    if(!exist) throw new BadRequestException(`car with ${id} not found`)
     
- return await this.carRepo.save(newcar)
-
+    await this.datasource.query(`delete from car where id=?`,[id]);
+    return `car with ${id} deleted successfully`
   }
-
-  async Update(id:number,Dto:UpdateCarDto):Promise<Car|null>{
-
-    const car=await this.carRepo.findOneBy({id})
-
-    if(!car) throw new BadRequestException("car not found")
-
-    Object.assign(car,Dto);
-    return await this.carRepo.save(car);
-  }
-
-  async Delete(id:number):Promise<string>{
-    const car=await this.carRepo.findOneBy({id})
-
-    if(!car) throw new BadRequestException("Car  not found")
-
-   await this.carRepo.delete(car)
-   return `the brand with id ${id} is deleted `
-  }
- 
-
 
   
 
-  
+
+
+  //   constructor(
+  //     @InjectRepository(Car)
+  //     private readonly carRepo:Repository<Car>,
+
+  //   ){}
+
+
+  //   async GetAll():Promise<Car[]>{
+  //     return await this.carRepo.find();
+  //   }
+
+  //   async GetByCarNo(id:number):Promise<Car|null>{
+
+  //     return await this.carRepo.findOneBy({id})
+  //   }
+
+  //   async Create(Dto:CreateCarDto):Promise<Car>{
+  //     const newcar= this.carRepo.create(Dto)
+
+  //  return await this.carRepo.save(newcar)
+
+  //   }
+
+  //   async Update(id:number,Dto:UpdateCarDto):Promise<Car|null>{
+
+  //     const car=await this.carRepo.findOneBy({id})
+
+  //     if(!car) throw new BadRequestException("car not found")
+
+  //     Object.assign(car,Dto);
+  //     return await this.carRepo.save(car);
+  //   }
+
+  //   async Delete(id:number):Promise<string>{
+  //     const car=await this.carRepo.findOneBy({id})
+
+  //     if(!car) throw new BadRequestException("Car  not found")
+
+  //    await this.carRepo.delete(car)
+  //    return `the brand with id ${id} is deleted `
+  //   }
+
+
+
+
+
+
 
 
 

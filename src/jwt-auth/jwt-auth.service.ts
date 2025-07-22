@@ -1,23 +1,41 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { userInfo } from 'os';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { loginDto } from './dto/login.dto';
+
 
 @Injectable()
 export class JwtAuthService {
- 
-    constructor(private readonly jwtService:JwtService){}
+    
+    
+    constructor(
+        @InjectRepository(User)
+        private readonly UserRepository:Repository<User>,
 
-    private users=[{username:"admin",password:"admin"}];
+        private readonly jwtService:JwtService){}
+
+    async signup(Dto:CreateUserDto){
+       const existing=await this.UserRepository.findOneBy({email:Dto.email})
+
+       if(existing) throw new BadRequestException("Email already exists")
+
+       const user=this.UserRepository.create(Dto)
+       return await this.UserRepository.save(user);
+
+    }
 
 
-    login(username:string,password:string){
-  
-        const user=this.users.find(
-            u=>u.username===username && u.password===password
-        );
-        if (!user) throw new UnauthorizedException("invalid credentials ");
+    async login(Dto:loginDto){
+        
+        const user=await this.UserRepository.findOneBy({email:Dto.email})
+        
+        if (!user || user.password!==Dto.password) throw new UnauthorizedException("invalid credentials ");
 
-        const payload={username:user.username}
+        const payload={sub:user.id,email:user.email}
         const token=this.jwtService.sign(payload);
 
         return{

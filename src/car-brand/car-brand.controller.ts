@@ -13,32 +13,65 @@ UseGuards(JwtAuthGuard)
 export class CarBrandController {
   constructor(private readonly carBrandService: CarBrandService) {}
 
- 
+  //raw sql
+
   @Get('list')
-  getALl():Promise<CarBrand[]>
-  {
- return this.carBrandService.GetAll();
+  getAll(){
+    return this.carBrandService.getAll()
   }
 
   @Get('list/:id')
-  getById(@Param('id') id:string):Promise<CarBrand|null>{
-    return this.carBrandService.GetById(+id)
+  GetById(@Param('id') id:number){
+    return this.carBrandService.getById(+id);
   }
 
   @Post('create')
-  Create(@Body() Dto:CreateBrandDto):Promise<CarBrand>{
-    return this.carBrandService.Create(Dto)
+  Create(@Body() Dto:CreateBrandDto){
+    return this.carBrandService.create(Dto)
   }
 
   @Put('update/:id')
-  Update(@Param('id') id:string ,@Body() Dto:UpdateBrandDto):Promise<CarBrand|null>{
-   return this.carBrandService.Update(+id,Dto);
+  update(@Param('id') id:number, @Body() Dto:UpdateBrandDto){
+    return this.carBrandService.update(id,Dto);
   }
 
   @Delete('delete/:id')
-  Delete(@Param('id') id:string):Promise<string>{
-    return this.carBrandService.Delete(+id)
+  delete(@Param('id') id:number){
+    return this.carBrandService.delete(+id);
   }
+
+
+  
+ 
+
+
+
+  //typeorm functions
+//   @Get('list')
+//   getALl():Promise<CarBrand[]>
+//   {
+//  return this.carBrandService.GetAll();
+//   }
+
+//   @Get('list/:id')
+//   getById(@Param('id') id:string):Promise<CarBrand|null>{
+//     return this.carBrandService.GetById(+id)
+//   }
+
+//   @Post('create')
+//   Create(@Body() Dto:CreateBrandDto):Promise<CarBrand>{
+//     return this.carBrandService.Create(Dto)
+//   }
+
+//   @Put('update/:id')
+//   Update(@Param('id') id:string ,@Body() Dto:UpdateBrandDto):Promise<CarBrand|null>{
+//    return this.carBrandService.Update(+id,Dto);
+//   }
+
+//   @Delete('delete/:id')
+//   Delete(@Param('id') id:string):Promise<string>{
+//     return this.carBrandService.Delete(+id)
+//   }
 
 
 

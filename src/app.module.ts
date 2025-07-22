@@ -23,7 +23,8 @@ import { CarType } from './car-type/car-type.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Car,CarBrand,CarType],
+      // entities: [Car,CarBrand,CarType],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
 
