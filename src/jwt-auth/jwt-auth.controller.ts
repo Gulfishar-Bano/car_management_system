@@ -1,7 +1,6 @@
 import { Controller,Post,Body } from '@nestjs/common';
 import { JwtAuthService } from './jwt-auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginDto } from 'src/auth/Dto/login.dto';
 import { loginDto } from './dto/login.dto';
 
 @Controller('jwt-auth')
@@ -14,7 +13,7 @@ export class JwtAuthController {
    }
 
    @Post('login')
-   login(@Body() dto:loginDto){
+   login(@Body() dto:CreateUserDto){
     return this.JwtauthService.login(dto);
    }
 
