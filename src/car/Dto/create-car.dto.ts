@@ -1,15 +1,9 @@
-import { IsString, IsInt, IsBoolean, IsNotEmpty } from 'class-validator';
+import { IsString, IsInt, IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateCarDto {
   @IsString()
   @IsNotEmpty()
   carNo: string;
-
-  @IsInt()
-  carTypeId: number;
-
-  @IsInt()
-  brandId: number;
 
   @IsString()
   model: string;
@@ -25,4 +19,13 @@ export class CreateCarDto {
 
   @IsString()
   description: string;
+
+  @IsNumber()
+  driverId: number;
+
+  @IsNumber()
+  brandId: number;
+
+  @IsNumber()
+  carTypeId: number;
 }

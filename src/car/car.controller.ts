@@ -27,12 +27,7 @@ export class CarController {
  
   @Post('create')
   async create(@Body() dto:CreateCarDto){
-
-    try {
-      return await this.carService.create(dto);
-    } catch (err) {
-      throw new BadRequestException("Invalid brand or car type ID");
-    }
+return this.carService.create(dto)
     
   }
 

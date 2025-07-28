@@ -1,4 +1,9 @@
-import {Entity,PrimaryGeneratedColumn,Column} from "typeorm";
+import {Entity,PrimaryGeneratedColumn,Column,ManyToOne,OneToMany} from "typeorm";
+import { Driver } from "src/driver/driver.entity";
+import { CarBrand } from "src/car-brand/car_brand.entity";
+import { CarType } from "src/car-type/car-type.entity";
+import { Fare } from "src/fare/fare.entity";
+
 
 @Entity()
 export class Car
@@ -9,11 +14,11 @@ export class Car
  @Column()
  carNo:string
 
- @Column()
- carTypeId:number
+ @ManyToOne(() => CarBrand, (brand) => brand.cars)
+brand: CarBrand;
 
- @Column()
- brandId:number
+@ManyToOne(() => CarType, (type) => type.cars)
+carType: CarType;
 
  @Column()
  model:string
@@ -27,8 +32,22 @@ export class Car
  @Column()
  ac:boolean
 
-@Column({nullable:true})
+ @Column({nullable:true})
 description:string
+
+@ManyToOne(()=>Driver ,driver=>driver.cars)
+driver:Driver;
+
+@OneToMany(()=>Fare,(fare)=>fare.car)
+fares:Fare[]
+
+ 
+}
+
  
 
-}
+
+
+
+
+ 

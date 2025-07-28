@@ -7,11 +7,27 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
 import { DataSource } from 'typeorm';
+import { CarBrand } from 'src/car-brand/car_brand.entity';
+import { CarType } from 'src/car-type/car-type.entity';
+import { Driver } from 'src/driver/driver.entity';
 
 @Injectable()
 export class CarService {
 
-  constructor(private readonly datasource: DataSource) { }
+  constructor(private readonly datasource: DataSource,
+    @InjectRepository(Car)
+      private readonly carRepo:Repository<Car>,
+    
+      @InjectRepository(CarBrand)
+      private readonly CarBrandRepo:Repository<CarBrand>,
+
+      @InjectRepository(CarType)
+      private readonly CarTypeRepo:Repository<CarType>,
+
+
+      @InjectRepository(Driver)
+      private readonly DriverRepo:Repository<Driver>
+    ) { }
 
 
   async getAll() {
@@ -29,20 +45,36 @@ export class CarService {
   }
   
   async create(dto:CreateCarDto){
-  
-    await this.datasource.query(`insert into car(carNo,carTypeId,brandId,model,fuelType,noOfSeats,ac,description) values (?,?,?,?,?,?,?,?)`,[dto.carNo,
-     dto.carTypeId,dto.brandId,dto.model,dto.fuelType,dto.noOfSeats,dto.ac,dto.description]
-    );
-    return ` car added successfully`
+    console.log("create called")
+    const driver=await this.DriverRepo.findOneBy({id:dto.driverId})
+    console.log(dto.driverId)
+    if(!driver) throw new BadRequestException("Driver not found")
+
+    const brand=await this.CarBrandRepo.findOneBy({id:dto.brandId})
+    if(!brand) throw new BadRequestException("brand not found")
+console.log(dto.brandId)
+    const carType=await this.CarTypeRepo.findOneBy({id:dto.carTypeId})
+    if(!carType) throw new BadRequestException("Type not found")
+
+    const newCar = this.carRepo.create({
+      ...dto,
+      driver,
+      brand,
+    carType,
+    });
+    
+    console.log(dto.carTypeId)
+    
+
+  return this.carRepo.save(newCar);
+
   }
 
+
   async delete(id:number){
-
-
     const exist=await this.getById(id);
     console.log(exist)
     if(!exist) throw new BadRequestException(`car with ${id} not found`)
-    
     await this.datasource.query(`delete from car where id=?`,[id]);
     return `car with ${id} deleted successfully`
   }

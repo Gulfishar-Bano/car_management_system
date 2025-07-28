@@ -1,45 +1,50 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-ioredis'; // ✅ fixed import
+
 import { CarModule } from './car/car.module';
-import { CarTypeModule } from './car-type/car-type.module';
 import { CarBrandModule } from './car-brand/car-brand.module';
+import { CarTypeModule } from './car-type/car-type.module';
+import { DriverModule } from './driver/driver.module';
+import { FareModule } from './fare/fare.module';
+import { SearchModule } from './search/search.module';
 import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
-import { Car } from './car/car.entity';
-import { CarBrand } from './car-brand/car_brand.entity';
-import { CarType } from './car-type/car-type.entity';
-import { CarBrandExternalService } from './car_brand_external/car_brand_external.service';
-import { CarBrandExternalController } from './car_brand_external/car_brand_external.controller';
-import { CarBrandExternalModule } from './car_brand_external/car_brand_external.module';
-import { HttpModule } from '@nestjs/axios';
+import { MarkupModule } from './markup/markup.module';
 
 @Module({
   imports: [
-    // Load .env file
     ConfigModule.forRoot({ isGlobal: true }),
 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || '3306', 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      // entities: [Car,CarBrand,CarType],
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      host: process.env.DB_HOST || 'localhost',
+      port: 3306,
+      username: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || 'gulfisha@18',
+      database: process.env.DB_NAME || 'car_management',
+      autoLoadEntities: true,
       synchronize: true,
     }),
 
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: redisStore, // ✅ No await, just pass the reference
+        host: 'localhost',
+        port: 6379,
+        ttl: 36000,
+      }),
+    }),
+
     CarModule,
-    CarTypeModule,
     CarBrandModule,
+    CarTypeModule,
+    DriverModule,
+    FareModule,
+    SearchModule,
     JwtAuthModule,
-    CarBrandExternalModule,
-    HttpModule
+    MarkupModule,
   ],
-  controllers: [AppController, CarBrandExternalController],
-  providers: [AppService, CarBrandExternalService],
 })
 export class AppModule {}
