@@ -7,11 +7,16 @@ import {
     Delete,
     Patch,
     BadRequestException,
+    UseGuards,
   } from '@nestjs/common';
   import { MarkupService } from './markup.service';
   import { CreateMarkupDto } from './dto/create-markup.dto';
   import { UpdateMarkupDto } from './dto/update-markup.dto';
-  
+import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
+
+
+
+  //@UseGuards(JwtAuthGuard)
   @Controller('markup')
   export class MarkupController {
     constructor(private readonly markupService: MarkupService) {}

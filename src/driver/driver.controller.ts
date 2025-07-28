@@ -4,7 +4,7 @@ import { CreateDriver } from './Dto/create-driver.dto';
 import { UpdateDriver } from './Dto/update-driver.dto';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 @Controller('driver')
 export class DriverController {
 

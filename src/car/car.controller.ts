@@ -9,7 +9,7 @@ import { Car } from './car.entity';
 
 
 // @UseGuards(AuthGuard)
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 
 @Controller('cars')
 export class CarController {

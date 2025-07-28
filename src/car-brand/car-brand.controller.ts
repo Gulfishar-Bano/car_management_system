@@ -8,7 +8,7 @@ import { Car } from 'src/car/car.entity';
 import { CarBrand } from './car_brand.entity';
 
 //@UseGuards(AuthGuard)
-UseGuards(JwtAuthGuard)
+//UseGuards(JwtAuthGuard)
 @Controller('car-brand')
 export class CarBrandController {
   constructor(private readonly carBrandService: CarBrandService) {}

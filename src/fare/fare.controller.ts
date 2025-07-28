@@ -1,7 +1,11 @@
 import { Controller ,Body,Post,Get,Param, Query, Delete} from '@nestjs/common';
 import { FareService } from './fare.service';
 import { CreateFare } from './dto/create-fare.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 
+
+//@UseGuards(JwtAuthGuard)
 @Controller('fare')
 export class FareController {
 
