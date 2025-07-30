@@ -1,8 +1,12 @@
-import { Controller,Get, Query,Param } from '@nestjs/common';
+import { Controller,Get, Query,Param, UseGuards } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchQuery } from './dto/search-query.dto';
+import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
+
+
 
  
+@UseGuards(JwtAuthGuard)
 @Controller('search')
 export class SearchController {
 

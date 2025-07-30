@@ -3,9 +3,12 @@ import { FareService } from './fare.service';
 import { CreateFare } from './dto/create-fare.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
+import { Roles } from 'src/jwt-auth/roles.decorator';
+import { RolesGuard } from 'src/jwt-auth/roles.guard';
 
 
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('admin')
 @Controller('fare')
 export class FareController {
 

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User, UserRole } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
 
@@ -20,7 +20,11 @@ export class JwtAuthService {
 
        if(existing) throw new BadRequestException("Email already exists")
 
-       const user=this.UserRepository.create(Dto)
+       const user=this.UserRepository.create(
+       { ...Dto,
+        role:UserRole.USER}
+       );
+       
        return await this.UserRepository.save(user);
 
     }
@@ -32,7 +36,7 @@ export class JwtAuthService {
         
         if (!user || user.password!==Dto.password) throw new UnauthorizedException("invalid credentials ");
 
-        const payload={sub:user.id,email:user.email}
+        const payload={username:user.email,sub:user.id,role:user.role}
         const token=this.jwtService.sign(payload);
 
         return{

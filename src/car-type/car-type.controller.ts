@@ -5,10 +5,14 @@ import { UpdateTypeDto } from './dto/update-type.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import { CarType } from './car-type.entity';
+import { RolesGuard } from 'src/jwt-auth/roles.guard';
+import { Roles } from 'src/jwt-auth/roles.decorator';
 
 //@UseGuards(AuthGuard)
 
-//@UseGuards(JwtAuthGuard)
+
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('admin')
 @Controller('car-type')
 export class CarTypeController {
 

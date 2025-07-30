@@ -5,12 +5,15 @@ import { UpdateCarDto } from './Dto/update-car.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import { Car } from './car.entity';
+import { RolesGuard } from 'src/jwt-auth/roles.guard';
+import { Roles } from 'src/jwt-auth/roles.decorator';
 
 
 
 // @UseGuards(AuthGuard)
-// @UseGuards(JwtAuthGuard)
-
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('admin')
+ 
 @Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}

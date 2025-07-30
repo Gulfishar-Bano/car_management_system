@@ -13,10 +13,13 @@ import {
   import { CreateMarkupDto } from './dto/create-markup.dto';
   import { UpdateMarkupDto } from './dto/update-markup.dto';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
+import { Roles } from 'src/jwt-auth/roles.decorator';
+import { RolesGuard } from 'src/jwt-auth/roles.guard';
 
 
 
-  //@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('admin')
   @Controller('markup')
   export class MarkupController {
     constructor(private readonly markupService: MarkupService) {}

@@ -3,8 +3,11 @@ import { DriverService } from './driver.service';
 import { CreateDriver } from './Dto/create-driver.dto';
 import { UpdateDriver } from './Dto/update-driver.dto';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
+import { RolesGuard } from 'src/jwt-auth/roles.guard';
+import { Roles } from 'src/jwt-auth/roles.decorator';
 
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('admin')
 @Controller('driver')
 export class DriverController {
 
