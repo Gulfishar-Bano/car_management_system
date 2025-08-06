@@ -1,16 +1,19 @@
-import { Entity,PrimaryGeneratedColumn,Column,OneToMany } from "typeorm";
-import { Car } from "src/car/car.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Car } from 'src/car/car.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 
+@ObjectType() 
 @Entity()
+export class CarType {
+  @Field(() => Int) 
+  @PrimaryGeneratedColumn()
+  id: number;
 
-export class CarType{
+  @Field() 
+  @Column()
+  name: string;
 
-    @PrimaryGeneratedColumn()
-    id:number
-
-    @Column()
-    name:string
-
-    @OneToMany(()=>Car,(car)=>car.carType)
-    cars:Car[]
+  @Field(() => [Car], { nullable: true })
+  @OneToMany(() => Car, (car) => car.carType)
+  cars: Car[];
 }

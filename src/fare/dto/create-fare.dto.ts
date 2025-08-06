@@ -1,23 +1,25 @@
-import { IsString,IsNumber,IsEnum, IsDateString } from "class-validator";
+import { InputType, Field, Float, Int } from '@nestjs/graphql';
+import { IsString, IsNumber } from 'class-validator';
 
-export class CreateFare{
+@InputType()
+export class CreateFare {
+  @Field()
+  @IsString()
+  FromLocation: string;
 
-@IsString()
-FromLocation:string
+  @Field()
+  @IsString()
+  ToLocation: string;
 
-@IsString()
-ToLocation:string
+  @Field()
+  @IsString()
+  currency: string;
 
-@IsString()
-currency:string
+  @Field(() => Float)
+  @IsNumber()
+  fare: number;
 
-@IsNumber()
-fare:number
-
-
-
-@IsNumber()
-carId:number
-
-
+  @Field(() => Int)
+  @IsNumber()
+  carId: number;
 }

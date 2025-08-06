@@ -9,12 +9,13 @@ import { CarBrandModule } from 'src/car-brand/car-brand.module';
 import { CarBrand } from 'src/car-brand/car_brand.entity';
 import { CarType } from 'src/car-type/car-type.entity';
 import { Driver } from 'src/driver/driver.entity';
+import { CarResolver } from './car.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car,CarBrand,CarType,Driver]),AuthModule,CarTypeModule, 
   CarBrandModule],
   controllers: [CarController],
-  providers: [CarService],
+  providers: [CarService, CarResolver],
   exports:[TypeOrmModule]
  
 })

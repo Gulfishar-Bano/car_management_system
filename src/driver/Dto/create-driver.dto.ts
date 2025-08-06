@@ -1,18 +1,22 @@
-import {  IsDateString, IsString, } from "class-validator";
+import { InputType, Field } from '@nestjs/graphql';
+import { IsString, IsDateString } from 'class-validator';
+import { GraphQLISODateTime } from '@nestjs/graphql';
 
-export class CreateDriver{
+@InputType()
+export class CreateDriver {
+  @Field()
+  @IsString()
+  firstName: string;
 
-    @IsString()
-    firstName:string
+  @Field()
+  @IsString()
+  lastName: string;
 
-    @IsString()
-    lastName:string
+  @Field()
+  @IsString()
+  licence: string;
 
-    @IsString()
-    licence:string
-
-    @IsDateString()
-    validity:string
-
-
+  @Field(()=>GraphQLISODateTime)
+  
+  validity: string; // or Date, if you prefer
 }

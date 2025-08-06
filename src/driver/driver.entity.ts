@@ -1,27 +1,34 @@
-import { Entity,PrimaryGeneratedColumn, Column,OneToMany } from "typeorm";
-import { Car } from "src/car/car.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Car } from 'src/car/car.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { GraphQLISODateTime } from '@nestjs/graphql';
 
 
+@ObjectType()
 @Entity()
-export class Driver{
+export class Driver {
+  @Field(() => Int)
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id:number
+  @Field()
+  @Column()
+  firstName: string;
 
-    @Column()
-    firstName:string
+  @Field()
+  @Column()
+  lastName: string;
 
-    @Column()
-    lastName:string
+  @Field()
+  @Column()
+  licence: string;
 
-    @Column()
-    licence:string
-
-    @Column({type:'date'})
-    validity:Date
-
-    @OneToMany(()=>Car ,(car)=>car.driver)
-    cars:Car[];
+  @Field(() => GraphQLISODateTime, { nullable: true })
+@Column({ type: 'date', nullable: true })
+validity: Date;
 
 
+  @Field(() => [Car], { nullable: true }) // Include related cars if needed
+  @OneToMany(() => Car, (car) => car.driver)
+  cars: Car[];
 }

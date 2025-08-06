@@ -11,6 +11,7 @@ import { CarBrand } from 'src/car-brand/car_brand.entity';
 import { CarType } from 'src/car-type/car-type.entity';
 import { Driver } from 'src/driver/driver.entity';
 
+
 @Injectable()
 export class CarService {
 
@@ -31,7 +32,12 @@ export class CarService {
 
 
   async getAll() {
-    return await this.datasource.query(`select * from car`);
+   
+    return this.carRepo.find({
+      relations:['carType','brand','driver']
+    })
+
+
   }
 
   async getById(id: number):Promise<Car|null> {
@@ -40,9 +46,51 @@ export class CarService {
   } 
 
   async update(id: number, dto: UpdateCarDto) {
-    await this.datasource.query(`update car set carNo=? ,carTypeId=?,brandId=?,model=?,fuelType=?,noOfSeats=?,ac=?,description=? where id=?`,[dto.carNo,dto.carTypeId,dto.brandId,dto.model,dto.fuelType,dto.noOfSeats,dto.ac,dto.description,id]);
+    await this.datasource.query(`update car set carNo=? ,carType=?,brand=?,model=?,fuelType=?,noOfSeats=?,ac=?,description=? where id=?`,[dto.carNo,dto.carType,dto.brand,dto.model,dto.fuelType,dto.noOfSeats,dto.ac,dto.description,id]);
     return `car with ${id} is updated`;
   }
+
+  async Update(id: number, dto: UpdateCarDto) {
+    const car = await this.carRepo.findOne({
+      where: { id },
+      relations: ['brand', 'carType', 'driver'],
+    });
+  
+    if (!car) throw new BadRequestException("Car not found");
+  
+    // Assign scalar fields
+    Object.assign(car, {
+      carNo: dto.carNo ?? car.carNo,
+      model: dto.model ?? car.model,
+      fuelType: dto.fuelType ?? car.fuelType,
+      noOfSeats: dto.noOfSeats ?? car.noOfSeats,
+      ac: dto.ac ?? car.ac,
+      description: dto.description ?? car.description,
+    });
+  
+    // Handle relations
+    if (dto.brand) {
+      const brand = await this.CarBrandRepo.findOneBy({ id: dto.brand });
+      if (!brand) throw new BadRequestException("Brand not found");
+      car.brand = brand;
+    }
+  
+    if (dto.carType) {
+      const type = await this.CarTypeRepo.findOneBy({ id: dto.carType });
+      if (!type) throw new BadRequestException("Car type not found");
+      car.carType = type;
+    }
+  
+    if (dto.driverId) {
+      const driver = await this.DriverRepo.findOneBy({ id: dto.driverId });
+      if (!driver) throw new BadRequestException("Driver not found");
+      car.driver = driver;
+    }
+  
+    return this.carRepo.save(car);
+  }
+  
+  
   
   async create(dto:CreateCarDto){
     console.log("create called")

@@ -16,24 +16,24 @@ export class CarTypeService {
 
   async getAll():Promise<CarType[]>{
 
-    return await this.dataSource.query(`select * from car_brand`)
+    return await this.dataSource.query(`select * from car_Type`)
 
   }
 
   async getById(id:number):Promise<CarType|null>{
-    return await this.dataSource.query(`select * from car_brand where id=?`,[id]);
+    return await this.dataSource.query(`select * from car_Type where id=?`,[id]);
   }
 
-  async create(Dto:CreateTypeDto):Promise<string>{
+  async create(Dto:CreateTypeDto):Promise<CarType>{
 
-    await this.dataSource.query(`insert into car_brand(name) values (?)`,[Dto.name]);
-    return 'car brand is added'
+   return await this.dataSource.query(`insert into car_Type(name) values (?)`,[Dto.name]);
+    
   }
 
-  async update(id:number,Dto:UpdateTypeDto):Promise<string>{
-    const updatedItem= await this.dataSource.query(`update car_brand set name=? where id=? `,[Dto.name,id]);
+  async update(id:number,Dto:UpdateTypeDto):Promise<CarType>{
+    return await this.dataSource.query(`update car_Type set name=? where id=? `,[Dto.name,id]);
    
-    return `the brand with ${id} is updated`;
+    
 
   }
 
@@ -42,9 +42,9 @@ export class CarTypeService {
     const deleted=await this.getById(id)
      if(!deleted) throw new BadRequestException(`car type ${id} is `)
 	
-		await this.dataSource.query(`DELETE FROM car_brand WHERE id = ?`, [id]);
+		await this.dataSource.query(`DELETE FROM car_Type WHERE id = ?`, [id]);
 	
-		return `The car brand with ${id} is deleted successfully`;
+		return `The car type with ${id} is deleted successfully`;
 	}
 	
 //typeorm

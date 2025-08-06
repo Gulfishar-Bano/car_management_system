@@ -54,8 +54,8 @@ export class SearchService {
 
         // Save the result to Redis with token as key, expires in 10 hours 
         await this.cacheManager.set(token, data, 36000);
-
-        // Return the response with token so client can use it later
+        console.log(token)
+        // Return the response with token so calient can use it later
         return { token, ...data };
       }),
     );
@@ -65,7 +65,10 @@ export class SearchService {
 
   // Fetches a specific search result from Redis using the token
   async getByToken(token: string) {
-    const result = await this.cacheManager.get(token); // Try to fetch cached result
+    console.log(token)
+    const result = await this.cacheManager.get(token);
+    console.log(token)
+    // Try to fetch cached result
     if (!result) throw new NotFoundException('Result not found for this token');
     return result;
   }

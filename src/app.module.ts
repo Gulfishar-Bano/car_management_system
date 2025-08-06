@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-ioredis'; // ✅ fixed import
+import * as redisStore from 'cache-manager-ioredis'; 
 
 import { CarModule } from './car/car.module';
 import { CarBrandModule } from './car-brand/car-brand.module';
@@ -12,6 +12,11 @@ import { FareModule } from './fare/fare.module';
 import { SearchModule } from './search/search.module';
 import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
 import { MarkupModule } from './markup/markup.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver,ApolloDriverConfig } from '@nestjs/apollo';
+
+import { join } from 'path';
+import { CarBrandResolver } from './car-brand/car_brand.resolver';
 
 @Module({
   imports: [
@@ -30,12 +35,21 @@ import { MarkupModule } from './markup/markup.module';
 
     CacheModule.registerAsync({
       useFactory: async () => ({
-        store: redisStore, // ✅ No await, just pass the reference
+        store: redisStore, 
         host: 'localhost',
         port: 6379,
         ttl: 36000,
       }),
     }),
+
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+       driver:ApolloDriver,
+       autoSchemaFile:join(process.cwd(),'src/schema.gql'),
+       sortSchema:true,
+       playground:true
+
+    }),
+
 
     CarModule,
     CarBrandModule,
@@ -46,5 +60,6 @@ import { MarkupModule } from './markup/markup.module';
     JwtAuthModule,
     MarkupModule,
   ],
+  providers: [CarBrandResolver],
 })
 export class AppModule {}

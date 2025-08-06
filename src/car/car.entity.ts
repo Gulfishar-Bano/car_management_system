@@ -1,53 +1,68 @@
-import {Entity,PrimaryGeneratedColumn,Column,ManyToOne,OneToMany} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { Driver } from "src/driver/driver.entity";
 import { CarBrand } from "src/car-brand/car_brand.entity";
 import { CarType } from "src/car-type/car-type.entity";
 import { Fare } from "src/fare/fare.entity";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 
+@ObjectType()
 @Entity()
-export class Car
-{
- @PrimaryGeneratedColumn()
- id:number
+export class Car {
+    @Field(() => Int)
+    @PrimaryGeneratedColumn()
+    id: number
 
- @Column()
- carNo:string
+    @Field()
+    @Column()
+    carNo: string
 
- @ManyToOne(() => CarBrand, (brand) => brand.cars)
-brand: CarBrand;
+    @Field(() => CarBrand, {nullable:true})
+    @ManyToOne(() => CarBrand, (brand) => brand.cars)
+    brand: CarBrand;
 
-@ManyToOne(() => CarType, (type) => type.cars)
-carType: CarType;
 
- @Column()
- model:string
+    @Field(() => CarType,{nullable:true})
+    @ManyToOne(() => CarType, (type) => type.cars,{nullable:true})
+    carType: CarType;
 
- @Column()
- fuelType:string
 
- @Column()
- noOfSeats:number
+    @Field()
+    @Column()
+    model: string
 
- @Column()
- ac:boolean
+    @Field()
+    @Column()
+    fuelType: string
 
- @Column({nullable:true})
-description:string
+    @Field()
+    @Column()
+    noOfSeats: number
 
-@ManyToOne(()=>Driver ,driver=>driver.cars)
-driver:Driver;
+    @Field()
+    @Column()
+    ac: boolean
 
-@OneToMany(()=>Fare,(fare)=>fare.car)
-fares:Fare[]
+    @Field({nullable:true})
+    @Column({ nullable: true })
+    description: string
 
- 
+
+    @Field(() => Driver,{nullable:true})
+    @ManyToOne(() => Driver, driver => driver.cars)
+    driver: Driver;
+
+
+    @Field(() => [Fare],{nullable:true})
+    @OneToMany(() => Fare, (fare) => fare.car)
+    fares: Fare[]
+
+
 }
 
- 
 
 
 
 
 
- 
+

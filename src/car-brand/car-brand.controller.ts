@@ -22,27 +22,27 @@ export class CarBrandController {
 
   @Get('list')
   getAll(){
-    return this.carBrandService.getAll()
+    return this.carBrandService.GetAll()
   }
 
   @Get('list/:id')
   GetById(@Param('id') id:number){
-    return this.carBrandService.getById(+id);
+    return this.carBrandService.GetById(+id);
   }
 
   @Post('create')
   Create(@Body() Dto:CreateBrandDto){
-    return this.carBrandService.create(Dto)
+    return this.carBrandService.Create(Dto)
   }
 
   @Put('update/:id')
   update(@Param('id') id:number, @Body() Dto:UpdateBrandDto){
-    return this.carBrandService.update(id,Dto);
+    return this.carBrandService.Update(id,Dto)
   }
 
   @Delete('delete/:id')
   delete(@Param('id') id:number){
-    return this.carBrandService.delete(+id);
+    return this.carBrandService.Delete(id)
   }
 
 

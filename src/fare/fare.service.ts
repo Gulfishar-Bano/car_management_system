@@ -19,7 +19,7 @@ export class FareService {
     private readonly MarkUpService: MarkupService,
   ) {}
 
-  async create(dto: CreateFare) {
+  async create(dto: CreateFare) :Promise<Fare>{
     const car = await this.CarRepository.findOneBy({ id: dto.carId });
     if (!car) throw new BadRequestException('Car not found');
 
@@ -32,7 +32,7 @@ export class FareService {
     return await this.FareRepository.save(fare);
   }
 
-  async findAll() {
+  async findAll():Promise<any[]> {
     const fares = await this.FareRepository.find({ relations: ['car'] });
     const markup = await this.MarkUpService.getCurrentMarkup(); // { type, value }
 
@@ -47,6 +47,8 @@ export class FareService {
         finalFare,
       };
     });
+
+    
   }
 
   async findByAmount(fareAmount: number) {
@@ -97,7 +99,7 @@ export class FareService {
     });
   }
 
-  async delete(id: number) {
+  async delete(id: number):Promise<string> {
     const fare = await this.FareRepository.findOneBy({ id });
     if (!fare) throw new BadRequestException('Fare not found');
 

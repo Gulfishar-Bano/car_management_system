@@ -5,6 +5,7 @@ import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MarkupModule } from 'src/markup/markup.module';
+import { SearchResolver } from './search.resolver';
 
 @Module({
   
@@ -13,7 +14,7 @@ import { MarkupModule } from 'src/markup/markup.module';
         CacheModule.register(),MarkupModule
     ],
 
-    providers:[SearchService],
+    providers:[SearchService, SearchResolver],
     controllers:[SearchController]
 
 

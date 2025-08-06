@@ -32,12 +32,12 @@ export class CarTypeController {
     }
 
     @Post('create')
-  Create(@Body() Dto:CreateTypeDto):Promise<string>{
+  Create(@Body() Dto:CreateTypeDto):Promise<CarType>{
     return this.carTypeService.create(Dto)
   }
 
   @Put('update/:id')
-  Update(@Param('id') id:string ,@Body() Dto:UpdateTypeDto):Promise<string>{
+  Update(@Param('id') id:string ,@Body() Dto:UpdateTypeDto):Promise<CarType>{
    return this.carTypeService.update(+id,Dto);
   }
 

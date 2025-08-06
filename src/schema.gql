@@ -1,0 +1,190 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Car {
+  ac: Boolean!
+  brand: CarBrand
+  carNo: String!
+  carType: CarType
+  description: String
+  driver: Driver
+  fares: [Fare!]
+  fuelType: String!
+  id: Int!
+  model: String!
+  noOfSeats: Float!
+}
+
+type CarBrand {
+  cars: [Car!]
+  id: Int!
+  name: String!
+}
+
+type CarData {
+  ac: Boolean!
+  carNo: String!
+  fuelType: String!
+  id: Int!
+  model: String!
+  seats: Int!
+}
+
+type CarType {
+  cars: [Car!]
+  id: Int!
+  name: String!
+}
+
+input CreateBrandDto {
+  name: String!
+}
+
+input CreateCarDto {
+  ac: Boolean!
+  brandId: Float!
+  carNo: Int!
+  carTypeId: Float!
+  description: String!
+  driverId: Float!
+  fuelType: String!
+  model: String!
+  noOfSeats: Float!
+}
+
+input CreateDriver {
+  firstName: String!
+  lastName: String!
+  licence: String!
+  validity: DateTime!
+}
+
+input CreateFare {
+  FromLocation: String!
+  ToLocation: String!
+  carId: Int!
+  currency: String!
+  fare: Float!
+}
+
+input CreateTypeDto {
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Driver {
+  cars: [Car!]
+  firstName: String!
+  id: Int!
+  lastName: String!
+  licence: String!
+  validity: DateTime
+}
+
+type Fare {
+  FromLocation: String!
+  ToLocation: String!
+  car: Car!
+  currency: String!
+  date: DateTime!
+  fare: Float!
+  id: Int!
+}
+
+type Markup {
+  createdAt: DateTime!
+  id: Int!
+  type: String!
+  value: Float!
+}
+
+type Mutation {
+  CreateBrand(input: CreateBrandDto!): CarBrand!
+  CreateCar(input: CreateCarDto!): Car!
+  CreateDriver(input: CreateDriver!): Driver!
+  CreateFare(input: CreateFare!): Fare!
+  CreateType(input: CreateTypeDto!): CarType!
+  Delete(id: Int!): String!
+  DeleteBrand(id: Int!): String!
+  DeleteCar(id: Int!): String!
+  DeleteDriver(id: Float!): String!
+  DeleteMarkup(id: Int!): String!
+  Update(id: Int!, input: UpdateTypeDto!): CarType!
+  UpdateBrand(id: Int!, input: UpdateBrandDto!): CarBrand!
+  UpdateCar(id: Int!, input: UpdateCarDto!): Car!
+  UpdateDriver(id: Int!, input: UpdateDriver!): Driver!
+  UpdateMarkUp(id: Int!, input: UpdateMarkupDto!): Markup!
+}
+
+type Query {
+  GetAllBrand: [CarBrand!]!
+  GetAllCars: [Car!]!
+  GetAllDriver: [Driver!]!
+  GetAllFares: [Fare!]!
+  GetAllMarkups: [Markup!]!
+  GetAllTypes: [CarType!]!
+  GetByToken(token: String!): SearchResult!
+  Search(filter: SearchQuery!): [SearchResult!]!
+}
+
+input SearchQuery {
+  ToLoc: String
+  ac: String
+  date: String
+  fareMax: Float
+  fareMin: Float
+  fromLoc: String
+  model: String
+}
+
+type SearchResult {
+  car: CarData!
+  currency: String!
+  date: DateTime!
+  fare: Int!
+  finalFare: Int!
+  from: String!
+  id: Int!
+  markupType: String!
+  markupValue: Int!
+  to: String!
+  token: String!
+}
+
+input UpdateBrandDto {
+  id: Int!
+  name: String
+}
+
+input UpdateCarDto {
+  ac: Boolean
+  brand: Int
+  carNo: String
+  carType: Int
+  description: String
+  driverId: Float
+  fuelType: String
+  model: String
+  noOfSeats: Int
+}
+
+input UpdateDriver {
+  firstName: String
+  lastName: String
+  licence: String
+  validity: DateTime
+}
+
+input UpdateMarkupDto {
+  type: String!
+  value: Float!
+}
+
+input UpdateTypeDto {
+  name: String!
+}

@@ -4,6 +4,7 @@ import { MarkupController } from './markup.controller';
 import { MarkupService } from './markup.service';
 import { Markup } from './markup.entity';
 import { Fare } from 'src/fare/fare.entity';
+import { MarkupResolver } from './markup.resolver';
 
 
 @Module({
@@ -12,7 +13,7 @@ import { Fare } from 'src/fare/fare.entity';
         TypeOrmModule.forFeature([Markup,Fare])
     ],
     controllers:[MarkupController],
-    providers:[MarkupService],
+    providers:[MarkupService, MarkupResolver],
     exports:[MarkupService]
 
 
