@@ -23,12 +23,12 @@ export class SearchService {
 
   // Handles the main search operation
   async search(query: SearchQuery) {
-    const fares = await this.searchLogic(query); // Fetches filtered fare records
+    const fares = await this.searchLogic(query); // Fetches filtered fare records from the database 
     const markup = await this.markupService.getCurrentMarkup(); // Gets the latest markup (type and value)
 
     // For each fare result, apply markup and save to Redis with a unique token
     const results = await Promise.all(
-      fares.map(async (fare) => {
+      fares.map(async (fare) => { 
         const token = uuidv4(); // Unique token for this result
         const markupAmount = this.calculateMarkup(fare.fare, markup.type, markup.value); // Calculate markup amount
         const finalFare = Number(fare.fare) + markupAmount; // Add markup to base fare
@@ -125,10 +125,13 @@ export class SearchService {
     return 0;
   }
 
+
+
   // Optional method to test Redis connectivity manually
   async debugCache() {
     await this.cacheManager.set('debug-key', { hello: 'world' }, 60);
     const result = await this.cacheManager.get('debug-key');
     console.log('Redis test value:', result);
   }
+  
 }
