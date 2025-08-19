@@ -3,3 +3,4 @@ import { CreateDriver } from './create-driver.dto';
 
 @InputType()
 export class UpdateDriver extends PartialType(CreateDriver) {}
+2
