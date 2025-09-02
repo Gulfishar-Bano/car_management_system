@@ -107,7 +107,7 @@ export class FareService {
     return `Fare with ID ${id} deleted`;
   }
 
-  // ✅ Utility method to compute markup value
+  
   private calculateMarkup(fare: number, type: 'percentage' | 'fixed', value: number): number {
     if (type === 'percentage') {
       return Number(fare) * (value / 100);

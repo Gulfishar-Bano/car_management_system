@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-ioredis'; 
-
 import { CarModule } from './car/car.module';
 import { CarBrandModule } from './car-brand/car-brand.module';
 import { CarTypeModule } from './car-type/car-type.module';
@@ -14,9 +13,12 @@ import { JwtAuthModule } from './jwt-auth/jwt-auth.module';
 import { MarkupModule } from './markup/markup.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver,ApolloDriverConfig } from '@nestjs/apollo';
-
 import { join } from 'path';
 import { CarBrandResolver } from './car-brand/car_brand.resolver';
+import { BookingModule } from './booking/booking.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailModule } from './booking/mail/mail.module';
+
 
 @Module({
   imports: [
@@ -49,8 +51,7 @@ import { CarBrandResolver } from './car-brand/car_brand.resolver';
        playground:true
 
     }),
-
-
+  
     CarModule,
     CarBrandModule,
     CarTypeModule,
@@ -59,6 +60,8 @@ import { CarBrandResolver } from './car-brand/car_brand.resolver';
     SearchModule,
     JwtAuthModule,
     MarkupModule,
+    BookingModule,
+    MailModule
   ],
   providers: [CarBrandResolver],
 })

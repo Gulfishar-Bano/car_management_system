@@ -7,11 +7,13 @@ import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import { Car } from './car.entity';
 import { RolesGuard } from 'src/jwt-auth/roles.guard';
 import { Roles } from 'src/jwt-auth/roles.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 
 
 // @UseGuards(AuthGuard)
 @UseGuards(JwtAuthGuard,RolesGuard)
+@ApiBearerAuth()
 @Roles('admin')
  
 @Controller('cars')

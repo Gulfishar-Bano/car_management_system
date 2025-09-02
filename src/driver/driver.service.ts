@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Driver } from './driver.entity';
 import { CreateDriver } from './Dto/create-driver.dto';
 import { UpdateDriver } from './Dto/update-driver.dto';
+import { Booking } from 'src/booking/entities/booking.entity';
 
 @Injectable()
 export class DriverService {
   constructor(
     @InjectRepository(Driver)
     private driverRepo: Repository<Driver>,
+   
   ) {}
 
   async create(dto: CreateDriver): Promise<Driver> {
@@ -18,9 +20,9 @@ export class DriverService {
   }
 
   async findAll(): Promise<Driver[]> {
-    const drivers = await this.driverRepo.find({ relations: ['cars'] });
+    const drivers = await this.driverRepo.find({ relations: ['cars','bookings'] });
 
-    // Convert validity to Date if needed (for GraphQL DateTime serialization)
+    
     return drivers.map((driver) => {
       if (driver.validity && typeof driver.validity === 'string') {
         driver.validity = new Date(driver.validity);
@@ -34,7 +36,7 @@ export class DriverService {
   async findOne(id: number) {
     const driver = await this.driverRepo.findOne({
       where: { id },
-      relations: ['cars'],
+      relations: ['cars','bookings'],
     });
     if (!driver) throw new BadRequestException('Driver not found');
     return driver;

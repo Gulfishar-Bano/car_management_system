@@ -4,6 +4,7 @@ import { CarBrand } from "src/car-brand/car_brand.entity";
 import { CarType } from "src/car-type/car-type.entity";
 import { Fare } from "src/fare/fare.entity";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Booking } from "src/booking/entities/booking.entity";
 
 
 @ObjectType()
@@ -52,10 +53,16 @@ export class Car {
     @ManyToOne(() => Driver, driver => driver.cars)
     driver: Driver;
 
+   
 
     @Field(() => [Fare],{nullable:true})
     @OneToMany(() => Fare, (fare) => fare.car)
     fares: Fare[]
+
+    @OneToMany(()=>Booking,booking=>booking.car)
+    bookings:Booking[]
+
+
 
 
 }

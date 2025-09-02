@@ -1,4 +1,3 @@
-// src/markup/markup.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +14,6 @@ export class MarkupService {
   ) {}
 
   
-   // Create a new markup
    
   async create(createDto: CreateMarkupDto): Promise<Markup> {
     const markup = this.markupRepo.create(createDto);
@@ -23,14 +21,14 @@ export class MarkupService {
   }
 
   
-   //Get all markup entries
+  
    
   async findAll(): Promise<Markup[]> {
     return this.markupRepo.find({ order: { createdAt: 'DESC' } });
   }
 
   
-   // Get one markup by ID
+   
    
   async findOne(id: number): Promise<Markup> {
     const markup = await this.markupRepo.findOneBy({ id });
@@ -41,7 +39,6 @@ export class MarkupService {
   }
 
   
-   //Update markup by ID
    
   async update(id: number, updateDto: UpdateMarkupDto): Promise<Markup> {
     const markup = await this.findOne(id);
@@ -50,7 +47,7 @@ export class MarkupService {
   }
 
   
-   // Delete markup by ID
+   
    
   async remove(id: number): Promise<string> {
     const result = await this.markupRepo.delete(id);
@@ -60,8 +57,7 @@ export class MarkupService {
     return `markup with ${id} deleted successfully `
   }
 
-  
-   //Get the most recent markup percentage (used dynamically in Fare)
+
    
   async getCurrentMarkup(): Promise<{ type: 'percentage' | 'fixed'; value: number }> {
     const latest = await this.markupRepo.find({
@@ -70,7 +66,7 @@ export class MarkupService {
     });
   
     if (!latest.length) {
-      return { type: 'percentage', value: 0 }; // default fallback
+      return { type: 'percentage', value: 0 }; 
     }
   
     return {
