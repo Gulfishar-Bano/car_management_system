@@ -36,7 +36,7 @@ return this.carService.create(dto)
 
   @Put('update/:id')
   update(@Param('id') id:string , @Body() dto:UpdateCarDto){
-    return this.carService.update(+id,dto);
+    return this.carService.Update(+id,dto);
   }
 
   @Delete('delete/:id')

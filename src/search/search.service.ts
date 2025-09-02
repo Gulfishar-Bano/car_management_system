@@ -13,26 +13,23 @@ import { Car } from 'src/car/car.entity';
 export class SearchService {
   constructor(
     @InjectRepository(Fare)
-    private readonly fareRepo: Repository<Fare>, // Injects the Fare entity repository
-
+    private readonly fareRepo: Repository<Fare>, 
     @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache, // Injects the Redis cache via NestJS's cache manager
+    private readonly cacheManager: Cache, 
 
-    private readonly markupService: MarkupService, // Service to get the latest markup config
-  ) {}
+    private readonly markupService: MarkupService ){}
 
-  // Handles the main search operation
+  
   async search(query: SearchQuery) {
-    const fares = await this.searchLogic(query); // Fetches filtered fare records from the database 
-    const markup = await this.markupService.getCurrentMarkup(); // Gets the latest markup (type and value)
+    const fares = await this.searchLogic(query); 
+    const markup = await this.markupService.getCurrentMarkup(); 
 
-    // For each fare result, apply markup and save to Redis with a unique token
+   
     const results = await Promise.all(
       fares.map(async (fare) => { 
-        const token = uuidv4(); // Unique token for this result
-        const markupAmount = this.calculateMarkup(fare.fare, markup.type, markup.value); // Calculate markup amount
-        const finalFare = Number(fare.fare) + markupAmount; // Add markup to base fare
-
+        const token = uuidv4(); 
+        const markupAmount = this.calculateMarkup(fare.fare, markup.type, markup.value); 
+        const finalFare = Number(fare.fare) + markupAmount;
         const data = {
           id: fare.id,
           from: fare.FromLocation,
@@ -52,10 +49,10 @@ export class SearchService {
           date:fare.date
         };
 
-        // Save the result to Redis with token as key, expires in 10 hours 
-        await this.cacheManager.set(token, data, 36000);
+        
+        await this.cacheManager.set(token, data, {ttl:3600} as any);
         console.log(token)
-        // Return the response with token so calient can use it later
+       
         return { token, ...data };
       }),
     );
@@ -63,17 +60,17 @@ export class SearchService {
     return results;
   }
 
-  // Fetches a specific search result from Redis using the token
+ 
   async getByToken(token: string) {
     console.log(token)
     const result = await this.cacheManager.get(token);
     console.log(token)
-    // Try to fetch cached result
+    
     if (!result) throw new NotFoundException('Result not found for this token');
     return result;
   }
 
-  // Performs filtering logic on Fare records based on query params
+  
   private async searchLogic(query: SearchQuery): Promise<Fare[]> {
     const { fromLoc, ToLoc, fareMin, fareMax, ac, model,date } = query;
 
@@ -82,7 +79,7 @@ export class SearchService {
       .where('fare.FromLocation LIKE :from', { from: `%${fromLoc}%` })
       .andWhere('fare.ToLocation LIKE :to', { to: `%${ToLoc}%` });
 
-    // Optional filtering by fare range
+   
     if (fareMin !== undefined) qb.andWhere('fare.fare >= :fareMin', { fareMin });
     if (fareMax !== undefined) qb.andWhere('fare.fare <= :fareMax', { fareMax });
 
@@ -92,33 +89,22 @@ export class SearchService {
 
     const fares = await qb.getMany();
 
-    // In-memory filtering for car AC and model
+   
     return fares.filter(f => {
       if(!f.car) return false
-
-      
-
        let acBool:boolean|undefined
       
        if(ac === 'true') acBool=true
 
        else if (ac=== 'false') acBool=false
-       
-
-     
+      
       if (acBool!== undefined && f.car.ac !== acBool) return false;
       if (model && !f.car.model.toLowerCase().includes(model.toLowerCase())) return false;
       return true;
-
-     
-      
     });
   }
 
-
   
-   
-  // Calculates markup amount based on type (percentage or fixed)
   private calculateMarkup(baseFare: number, type: 'percentage' | 'fixed', value: number): number {
     if (type === 'percentage') return baseFare * (value / 100);
     if (type === 'fixed') return value;
@@ -126,8 +112,6 @@ export class SearchService {
   }
 
 
-
-  // Optional method to test Redis connectivity manually
   async debugCache() {
     await this.cacheManager.set('debug-key', { hello: 'world' }, 60);
     const result = await this.cacheManager.get('debug-key');
