@@ -5,12 +5,12 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateBookingDto {
 
 @ApiProperty({ example: 'Banglore', description: 'Pickup location' })
-@IsNotEmpty()
+
 PickUpLocation:string
 
 
 @ApiProperty({ example: 'Mysore', description: 'Drop location' })
-@IsNotEmpty()
+
 DropLocation:string
 
 @ApiProperty({ example: '2025-09-02T10:00:00Z', description: 'Date' })
@@ -28,8 +28,12 @@ Email:string
 // @IsNumber()
 // driverId:number
 
-// @IsNumber()
-// carId:number
+@IsNumber()
+carId:number
+
+@IsNumber()
+fareId:number
+
 @ApiProperty({ example: 'Pending', description: 'Status' })
 @IsEnum(BookingStatus)
 @IsOptional()

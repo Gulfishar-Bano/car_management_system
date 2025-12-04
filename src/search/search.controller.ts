@@ -6,7 +6,7 @@ import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 
 
  
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('search')
 export class SearchController {
 

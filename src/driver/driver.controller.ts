@@ -6,8 +6,8 @@ import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from 'src/jwt-auth/roles.guard';
 import { Roles } from 'src/jwt-auth/roles.decorator';
 
-@UseGuards(JwtAuthGuard,RolesGuard)
-@Roles('admin')
+//@UseGuards(JwtAuthGuard,RolesGuard)
+//@Roles('admin')
 @Controller('driver')
 export class DriverController {
 

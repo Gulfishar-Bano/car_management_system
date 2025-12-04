@@ -11,8 +11,8 @@ import { Roles } from 'src/jwt-auth/roles.decorator';
 //@UseGuards(AuthGuard)
 
 
-@UseGuards(JwtAuthGuard,RolesGuard)
-@Roles('admin')
+//@UseGuards(JwtAuthGuard,RolesGuard)
+//@Roles('admin')
 @Controller('car-type')
 export class CarTypeController {
 

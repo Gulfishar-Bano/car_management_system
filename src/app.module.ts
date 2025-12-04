@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+//import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-ioredis'; 
 import { CarModule } from './car/car.module';
@@ -22,14 +22,14 @@ import { MailModule } from './booking/mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+   // ConfigModule.forRoot({ isGlobal: true }),
 
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST || 'localhost',
       port: 3306,
       username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || 'gulfisha@18',
+      password: process.env.DB_PASS || 'root',
       database: process.env.DB_NAME || 'car_management',
       autoLoadEntities: true,
       synchronize: true,

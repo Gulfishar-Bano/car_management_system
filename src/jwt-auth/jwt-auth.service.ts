@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserRole } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
-
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class JwtAuthService {
@@ -21,7 +21,9 @@ export class JwtAuthService {
        if(existing) throw new BadRequestException("Email already exists")
 
        const user=this.UserRepository.create(
-       { ...Dto,
+       { name: Dto.Name, // This maps the DTO's 'Name' to the entity's 'name'
+        email: Dto.email,
+        password: Dto.password,
         role:UserRole.USER}
        );
        
@@ -29,22 +31,41 @@ export class JwtAuthService {
 
     }
 
+// In your JwtAuthService
 
-    async login(Dto:loginDto){
-        
-        const user=await this.UserRepository.findOneBy({email:Dto.email})
-        
-        if (!user || user.password!==Dto.password) throw new UnauthorizedException("invalid credentials ");
+async login(Dto: loginDto) {
 
-        const payload={username:user.email,sub:user.id,role:user.role}
-        const token=this.jwtService.sign(payload);
-
-        return{
-            Message:"login successfull",
-            token,
-        };
+    const user = await this.UserRepository.findOneBy({ email: Dto.email });
     
+   
+    if (!user) {
+        throw new UnauthorizedException("Invalid credentials");
     }
+
+    
+   
+
+  
+    const payload = {
+        name: user.name,       
+        username: user.email, 
+        sub: user.id, 
+        role: user.role
+    };
+    
+   
+    const token = this.jwtService.sign(payload);
+
+    return {
+        Message: "Login successful",
+        token,
+    };
+}
+
+async logout() {
+  return { message: "Logout successful" };
+}
+
 
    
 }

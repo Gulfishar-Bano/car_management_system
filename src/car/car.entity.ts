@@ -53,7 +53,9 @@ export class Car {
     @ManyToOne(() => Driver, driver => driver.cars)
     driver: Driver;
 
-   
+   @Field({nullable:true})
+    @Column({ nullable: true })
+    imageUrl: string
 
     @Field(() => [Fare],{nullable:true})
     @OneToMany(() => Fare, (fare) => fare.car)

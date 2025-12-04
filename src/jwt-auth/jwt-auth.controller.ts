@@ -13,9 +13,15 @@ export class JwtAuthController {
    }
 
    @Post('login')
-   login(@Body() dto:CreateUserDto){
+   login(@Body() dto:loginDto){
     return this.JwtauthService.login(dto);
    }
+
+     @Post('logout')
+   logout(@Body() dto:loginDto){
+    return this.JwtauthService.logout();
+   }
+
 
 
 }

@@ -45,6 +45,7 @@ export class SearchService {
             ac: fare.car?.ac,
             fuelType: fare.car?.fuelType,
             seats: fare.car?.noOfSeats,
+            imageUrl: fare.car?.imageUrl,
           },
           date:fare.date
         };

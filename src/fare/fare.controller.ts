@@ -7,8 +7,8 @@ import { Roles } from 'src/jwt-auth/roles.decorator';
 import { RolesGuard } from 'src/jwt-auth/roles.guard';
 
 
-@UseGuards(JwtAuthGuard,RolesGuard)
-@Roles('admin')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('admin')
 @Controller('fare')
 export class FareController {
 

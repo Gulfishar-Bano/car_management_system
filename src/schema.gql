@@ -12,6 +12,7 @@ type Car {
   fares: [Fare!]
   fuelType: String!
   id: Int!
+  imageUrl: String
   model: String!
   noOfSeats: Float!
 }
@@ -43,14 +44,15 @@ input CreateBrandDto {
 
 input CreateCarDto {
   ac: Boolean!
-  brandId: Float!
-  carNo: Int!
-  carTypeId: Float!
+  brandId: Int!
+  carNo: String!
+  carTypeId: Int!
   description: String!
-  driverId: Float!
+  driverId: Int!
   fuelType: String!
+  imageUrl: String
   model: String!
-  noOfSeats: Float!
+  noOfSeats: Int!
 }
 
 input CreateDriver {

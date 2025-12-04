@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe  } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
@@ -48,8 +48,8 @@ export class BookingController {
   }
 
   @Post('assign')
-  Assign(@Body('bookingId') id:number, @Body('driverId') driverId:number, @Body('carId') carId:number){
-    return this.bookingService.AssignCarDriver(id,carId,driverId)
+  Assign(@Body('bookingId') id:number, @Body('driverId') driverId:number){
+    return this.bookingService.AssignCarDriver(id,driverId)
   }
 
   @Get('test-email')
@@ -60,5 +60,13 @@ export class BookingController {
     { name: 'Test', bookingId: 123, pickup: 'A', drop: 'B' }
   );
 }
+
+
+ @Get(':id/voucher')
+  async getBookingVoucher(@Param('id', ParseIntPipe) id: number) {
+    return this.bookingService.getBookingWithDetails(id);
+  }
+
+ 
 
 }
