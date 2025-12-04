@@ -18,22 +18,24 @@ import { CarBrandResolver } from './car-brand/car_brand.resolver';
 import { BookingModule } from './booking/booking.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './booking/mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
-   // ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true }),
 
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: 3306,
-      username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || 'root',
-      database: process.env.DB_NAME || 'car_management',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+  type: 'mysql',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  autoLoadEntities: true,
+  synchronize: true,
+}),
+
 
     CacheModule.registerAsync({
       useFactory: async () => ({
