@@ -118,5 +118,28 @@ export class SearchService {
     const result = await this.cacheManager.get('debug-key');
     console.log('Redis test value:', result);
   }
+
+
+
+  async autoComplete(name: string): Promise<any[]> {
+  try {
+
+    console.log("name",name)
+    const query = `
+      SELECT DISTINCT FromLocation AS location FROM fare WHERE FromLocation LIKE '${name}%'
+      UNION
+      SELECT DISTINCT ToLocation AS location FROM fare WHERE ToLocation LIKE '${name}%'
+    `;
+
+    console.log("query",query)
+
+    const result = await this.fareRepo.query(query);
+    return result;
+  } catch (error) {
+    console.error("autocomplete error:", error);
+    throw new Error("Server error");
+  }
+}
+
   
 }

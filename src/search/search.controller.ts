@@ -1,4 +1,4 @@
-import { Controller,Get, Query,Param, UseGuards } from '@nestjs/common';
+import { Controller,Get, Query,Param, UseGuards,Post } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchQuery } from './dto/search-query.dto';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
@@ -30,6 +30,11 @@ export class SearchController {
       return this.searchService.debugCache()
      }
 
+     @Get("autocomplete")
+async autocomplete(@Query("name") name: string) {
+  if (!name) return [];
+  return await this.searchService.autoComplete(name);
+}
 
 
 }
