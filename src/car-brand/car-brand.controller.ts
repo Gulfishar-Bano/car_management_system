@@ -9,11 +9,11 @@ import { CarBrand } from './car_brand.entity';
 import { RolesGuard } from 'src/jwt-auth/roles.guard';
 import { Roles } from 'src/jwt-auth/roles.decorator';
 
-//@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 
 
-//@UseGuards(JwtAuthGuard,RolesGuard)
-//@Roles('admin')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('admin')
 @Controller('car-brand')
 export class CarBrandController {
   constructor(private readonly carBrandService: CarBrandService) {}

@@ -18,8 +18,8 @@ import { RolesGuard } from 'src/jwt-auth/roles.guard';
 
 
 
-@UseGuards(JwtAuthGuard,RolesGuard)
-@Roles('admin')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('admin')
   @Controller('markup')
   export class MarkupController {
     constructor(private readonly markupService: MarkupService) {}

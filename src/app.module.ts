@@ -19,7 +19,7 @@ import { BookingModule } from './booking/booking.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './booking/mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
-
+import { RealtimeModule } from './realtime/realtime.module';
 
 @Module({
   imports: [
@@ -63,7 +63,8 @@ import { ConfigModule } from '@nestjs/config';
     JwtAuthModule,
     MarkupModule,
     BookingModule,
-    MailModule
+    MailModule,
+    RealtimeModule,
   ],
   providers: [CarBrandResolver],
 })

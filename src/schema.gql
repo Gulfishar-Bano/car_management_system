@@ -85,7 +85,8 @@ type Driver {
   id: Int!
   lastName: String!
   licence: String!
-  validity: DateTime
+  phone: Float!
+  validity: DateTime!
 }
 
 type Fare {

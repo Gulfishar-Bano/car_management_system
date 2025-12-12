@@ -36,28 +36,33 @@ export class CarController {
  @Post('create')
 @UseInterceptors(FileInterceptor('image'))  
 async create(
-  @UploadedFile() file: any,// File is expected via the 'image' field
+  @UploadedFile() file: any,
   @Body() dto: CreateCarDto,                
 ) {
+  console.log("DTO received:", dto);
+  console.log("File received:", file);
   return this.carService.create(dto, file);
 }
 
 
-  @Put('update/:id')
-  @UseInterceptors(FileInterceptor('image')) // <-- ADDED: Intercept file on update
-  update(
-      @Param('id') id:string, 
-      @UploadedFile() file: any, // <-- ADDED: Capture optional file
-      @Body() dto:UpdateCarDto
-    ){
-    // <-- MODIFIED: Pass the file object to the service
-    return this.carService.Update(+id, dto, file); 
-  }
+ @Put('update/:id')
+@UseInterceptors(FileInterceptor('image'))
+async update(
+  @Param('id') id: string,
+  @UploadedFile() file: any,
+  @Body() dto: any
+) {
+  console.log("Update DTO:", dto);
+  console.log("Update File:", file);
+
+  return this.carService.Update(+id, dto, file);
+}
+
 
   @Delete('delete/:id')
  Delete(@Param('id') id:string){
   
-  // The service layer will handle finding the car and deleting the associated file.
+ 
   return this.carService.delete(+id);
 
  }

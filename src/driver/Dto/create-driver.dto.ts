@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsDateString } from 'class-validator';
+import { IsString, IsDateString,IsOptional,IsBoolean } from 'class-validator';
 import { GraphQLISODateTime } from '@nestjs/graphql';
 
 @InputType()
@@ -15,6 +15,10 @@ export class CreateDriver {
   @Field()
   @IsString()
   licence: string;
+
+  @IsOptional() // Since the Entity provides a 'default: true'
+    @IsBoolean()
+    isActive: boolean;
 
   @Field(()=>GraphQLISODateTime)
   

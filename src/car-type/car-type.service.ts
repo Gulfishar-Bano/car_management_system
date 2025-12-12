@@ -13,28 +13,28 @@ export class CarTypeService {
   constructor (private readonly dataSource:DataSource){}
 
   async getAll():Promise<CarType[]>{
-    return await this.dataSource.query(`select * from car_Type`)
+    return await this.dataSource.query(`select * from car_type`)
   }
 
   async getById(id:number):Promise<CarType|null>{
-    return await this.dataSource.query(`select * from car_Type where id=?`,[id]);
+    return await this.dataSource.query(`select * from car_type where id=?`,[id]);
   }
 
   async create(Dto:CreateTypeDto):Promise<CarType>{
 
-   return await this.dataSource.query(`insert into car_Type(name) values (?)`,[Dto.name]);
+   return await this.dataSource.query(`insert into car_type(name) values (?)`,[Dto.name]);
     
   }
 
   async update(id:number,Dto:UpdateTypeDto):Promise<CarType>{
-    return await this.dataSource.query(`update car_Type set name=? where id=? `,[Dto.name,id]);
+    return await this.dataSource.query(`update car_type set name=? where id=? `,[Dto.name,id]);
   }
 
 
 	async delete(id: number): Promise<string> {
     const deleted=await this.getById(id)
      if(!deleted) throw new BadRequestException(`car type ${id} is `)
-		await this.dataSource.query(`DELETE FROM car_Type WHERE id = ?`, [id]);
+		await this.dataSource.query(`DELETE FROM car_type WHERE id = ?`, [id]);
 		return `The car type with ${id} is deleted successfully`;
 	}
 	

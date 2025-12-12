@@ -19,19 +19,14 @@ export class DriverService {
     return this.driverRepo.save(NewDriver);
   }
 
-  async findAll(): Promise<Driver[]> {
-    const drivers = await this.driverRepo.find({ relations: ['cars','bookings'] });
-
-    
-    return drivers.map((driver) => {
-      if (driver.validity && typeof driver.validity === 'string') {
-        driver.validity = new Date(driver.validity);
-        console.log('Driver validity:', driver.validity, typeof driver.validity);
-
-      }
-      return driver;
-    });
-  }
+ 
+  
+async findAll(): Promise<Driver[]> {
+  // Let TypeORM handle the dates as Date objects based on the Entity definition
+  const drivers = await this.driverRepo.find({ relations: ['cars','bookings'] });
+  
+  return drivers; 
+}
 
   async findOne(id: number) {
     const driver = await this.driverRepo.findOne({
@@ -45,9 +40,10 @@ export class DriverService {
   async Update(id: number, dto: UpdateDriver): Promise<Driver> {
     const driver = await this.findOne(id);
 
-    Object.assign(driver, dto);
+    // If DTO is { isActive: false }, Object.assign updates *only* that field.
+    Object.assign(driver, dto); 
     return this.driverRepo.save(driver);
-  }
+}
 
   async remove(id: number): Promise<String> {
     const deleted = await this.findOne(id);

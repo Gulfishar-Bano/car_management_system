@@ -20,14 +20,23 @@ export class Driver {
   @Column()
   lastName: string;
 
+  @Column({ default: true }) 
+    isActive: boolean;
+
   @Field()
   @Column()
   licence: string;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
-@Column({ type: 'date', nullable: true })
+  
+
+  @Field(() => GraphQLISODateTime) // Correct GraphQL Type for Date object
+@Column({ type: 'date' }) // Use the simple 'date' type
 validity: Date;
 
+
+@Field()
+  @Column()
+  phone : number;
 
   @Field(() => [Car], { nullable: true }) // Include related cars if needed
   @OneToMany(() => Car, (car) => car.driver)

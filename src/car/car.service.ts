@@ -36,64 +36,64 @@ export class CarService {
         return result[0] || null;
     }
 
+async Update(id: number, dto: any, file?:any) {
+  // 1️⃣ Fetch existing car with relations
+  const car = await this.carRepo.findOne({
+    where: { id },
+    relations: ['brand', 'carType'],
+  });
 
-    async Update(id: number, dto: UpdateCarDto, file?:any) { // <-- ADDED file parameter
-        const car = await this.carRepo.findOne({
-            where: { id },
-            relations: ['brand', 'carType', 'driver'],
-        });
+  if (!car) throw new BadRequestException("Car not found");
 
-        if (!car) throw new BadRequestException("Car not found");
-
-        // --- LOGIC: HANDLE IMAGE REPLACEMENT ---
-        if (file && file.filename) {
-            // 1. Delete the old image file if it exists
-            if (car.imageUrl) {
-                // Construct the absolute path: ProjectRoot/uploads/cars/filename.ext
-                const oldFilePath = path.join(process.cwd(), car.imageUrl);
-
-                if (fs.existsSync(oldFilePath)) {
-                    try {
-                        fs.unlinkSync(oldFilePath);
-                    } catch (error) {
-                        console.error('Failed to delete old car image:', error);
-                    }
-                }
-            }
-            // 2. Assign the new image URL
-            car.imageUrl = `/uploads/cars/${file.filename}`;
+  // 2️⃣ Handle image update
+  if (file && file.filename) {
+    // Delete old image if exists
+    if (car.imageUrl) {
+      const oldFilePath = path.join(process.cwd(), car.imageUrl);
+      if (fs.existsSync(oldFilePath)) {
+        try {
+          fs.unlinkSync(oldFilePath);
+        } catch (err) {
+          console.error("Failed to delete old car image:", err);
         }
-        // ------------------------------------------
-
-        // Assign scalar fields (existing logic)
-        Object.assign(car, {
-            carNo: dto.carNo ?? car.carNo,
-            model: dto.model ?? car.model,
-            fuelType: dto.fuelType ?? car.fuelType,
-            noOfSeats: dto.noOfSeats ?? car.noOfSeats,
-            ac: dto.ac ?? car.ac,
-            description: dto.description ?? car.description,
-        });
-
-        // Handle relations (existing logic)
-        if (dto.brand) {
-            const brand = await this.CarBrandRepo.findOneBy({ id: dto.brand });
-            if (!brand) throw new BadRequestException("Brand not found");
-            car.brand = brand;
-        }
-        if (dto.carType) {
-            const type = await this.CarTypeRepo.findOneBy({ id: dto.carType });
-            if (!type) throw new BadRequestException("Car type not found");
-            car.carType = type;
-        }
-        if (dto.driverId) {
-            const driver = await this.DriverRepo.findOneBy({ id: dto.driverId });
-            if (!driver) throw new BadRequestException("Driver not found");
-            car.driver = driver;
-        }
-
-        return this.carRepo.save(car);
+      }
     }
+    car.imageUrl = `/uploads/cars/${file.filename}`;
+  }
+
+  // 3️⃣ Update basic fields
+  car.model = dto.model ?? car.model;
+  car.carNo = dto.carNo ?? car.carNo;
+  car.fuelType = dto.fuelType ?? car.fuelType;
+  car.description = dto.description ?? car.description;
+
+  // Convert noOfSeats string to number safely
+  if (dto.noOfSeats && !isNaN(Number(dto.noOfSeats))) {
+    car.noOfSeats = Number(dto.noOfSeats);
+  }
+
+  // Convert ac string to boolean
+  if (dto.ac === 'true') car.ac = true;
+  else if (dto.ac === 'false') car.ac = false;
+
+  // 4️⃣ Update relations using correct IDs
+  if (dto.brandId) {
+    const brand = await this.CarBrandRepo.findOneBy({ id: Number(dto.brandId) });
+    if (!brand) throw new BadRequestException("Brand not found");
+    car.brand = brand;
+  }
+
+  if (dto.carTypeId) {
+    const type = await this.CarTypeRepo.findOneBy({ id: Number(dto.carTypeId) });
+    if (!type) throw new BadRequestException("Car type not found");
+    car.carType = type;
+  }
+
+
+  // 5️⃣ Save updated car
+  return this.carRepo.save(car);
+}
+
 
 
     async create(dto: CreateCarDto, file?:any) { // Use Express.Multer.File or 'any'
