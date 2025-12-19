@@ -22,7 +22,7 @@ export class DriverService {
  
   
 async findAll(): Promise<Driver[]> {
-  // Let TypeORM handle the dates as Date objects based on the Entity definition
+  
   const drivers = await this.driverRepo.find({ relations: ['cars','bookings'] });
   
   return drivers; 

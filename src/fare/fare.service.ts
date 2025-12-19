@@ -32,6 +32,25 @@ export class FareService {
     return await this.FareRepository.save(fare);
   }
 
+ async Update(id: number, dto: any): Promise<any> {
+    const fare= await this.findOne(id);
+
+    // If DTO is { isActive: false }, Object.assign updates *only* that field.
+    Object.assign(fare, dto); 
+    return this.FareRepository.save(fare);
+}
+
+ async findOne(id: number) {
+    const fare = await this.FareRepository.findOne({
+      where: { id },
+      relations: ['car'],
+    });
+    if (!fare) throw new BadRequestException('Driver not found');
+    return fare;
+  }
+
+
+
   async findAll():Promise<any[]> {
     const fares = await this.FareRepository.find({ relations: ['car'] });
     const markup = await this.MarkUpService.getCurrentMarkup(); // { type, value }

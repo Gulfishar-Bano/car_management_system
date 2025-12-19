@@ -1,5 +1,5 @@
 import { InputType, Field, Float, Int } from '@nestjs/graphql';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateFare {
@@ -13,6 +13,7 @@ export class CreateFare {
 
   @Field()
   @IsString()
+  @IsOptional()
   currency: string;
 
   @Field(() => Float)

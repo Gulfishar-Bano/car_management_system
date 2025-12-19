@@ -93,7 +93,6 @@ type Fare {
   FromLocation: String!
   ToLocation: String!
   car: Car!
-  currency: String!
   date: DateTime!
   fare: Float!
   id: Int!

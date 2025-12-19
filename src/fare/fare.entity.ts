@@ -21,9 +21,7 @@ export class Fare{
     @Column()
     ToLocation:string
 
-    @Field()
-    @Column()
-    currency:string
+    
 
     @Field()
     @Column('decimal')

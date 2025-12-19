@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .email-card {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 500px;
+            margin: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .section-title {
+            color: #007bff;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        .details { line-height: 1.6; }
+        .footer { font-size: 12px; color: #888; margin-top: 30px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="email-card">
+        <div class="header">
+            <h2>Booking Confirmed!</h2>
+        </div>
+        
+        <div class="details">
+            <p>Hello <strong>{{name}}</strong>,</p>
+            <p>Your ride request (ID: #{{bookingId}}) has been successfully processed and a driver has been allotted.</p>
+
+            <h3 class="section-title">Driver & Vehicle</h3>
+            <p><strong>Driver Name:</strong> {{driverName}}</p>
+            <p><strong>Driver PhoneNumber:</strong>{{driverPhoneNumber}}</p>
+            <p><strong>Car Model:</strong> {{carModel}}</p>
+
+            <h3 class="section-title">Trip Details</h3>
+            <p><strong>From:</strong> {{pickup}}</p>
+            <p><strong>To:</strong> {{drop}}</p>
+            <p><strong>Total Fare:</strong> ₹{{fare}}</p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing Carisma Car Rentals.</p>
+            <p>If you have any questions, contact us at support@carisma.com</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { Controller ,Body,Post,Get,Param, Query, Delete} from '@nestjs/common';
+import { Controller ,Body,Post,Get,Param, Query, Delete,Put} from '@nestjs/common';
 import { FareService } from './fare.service';
 import { CreateFare } from './dto/create-fare.dto';
 import { UseGuards } from '@nestjs/common';
@@ -20,6 +20,14 @@ export class FareController {
     @Post('create')
     create(@Body() dto:CreateFare){
         return this.FareService.create(dto)
+    }
+
+
+    
+    @Put('update/:id')
+    update(@Param('id') id:string ,@Body() dto:any)
+    {
+        return this.FareService.Update(+id,dto)
     }
  
     @Get('list')

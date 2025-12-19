@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 
@@ -7,20 +8,23 @@ import { join } from 'path';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
-        port: 587,
+       host: 'smtp.gmail.com',
+    port: 465, // Recommended for Gmail
+    secure: true,
         auth: {
-          user: 'gulfisha9886@gmail.com',
-          pass: 'jqws uyyb kvog izqk',
+          user: 'gulfishar.provab@gmail.com',
+          pass: 'yepckifbxgqendnl',
         },
       },
       defaults: {
-        from: '"Car Booking App" <no-reply@yourdomain.com>',
+        from: '"Carisma Rentals" <no-reply@yourdomain.com>',
       },
       template: {
-        dir: join(__dirname, '/templates'),  
-        adapter: new (require('@nestjs-modules/mailer/dist/adapters/handlebars.adapter').HandlebarsAdapter)(),
-        options: { strict: true },
+        dir: join(__dirname, 'templates'), // Where your HTML files will live
+        adapter: new HandlebarsAdapter(), 
+        options: {
+          strict: false,
+        },
       },
     }),
   ],

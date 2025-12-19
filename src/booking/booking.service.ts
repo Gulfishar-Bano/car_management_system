@@ -19,31 +19,30 @@ export class BookingService {
     @InjectRepository(Driver) private readonly DriverRepo:Repository<Driver>,
     @InjectRepository(Fare) private readonly FareRepo:Repository<Fare>,
     @InjectRepository(Booking) private readonly BookingRepo:Repository<Booking>,
-    private readonly MailService:MailService
+   private readonly mailService:MailService
   ){}
 
   
 
   async create(Dto: CreateBookingDto) {
-    // 1. Fetch the Car entity using the ID from the DTO
+  
     const car = await this.CarRepo.findOne({ where: { id: Dto.carId } });
     
     if (!car) {
         throw new NotFoundException(`Car with ID ${Dto.carId} not found.`);
     }
 
-    // 2. Fetch the Fare entity using the ID from the DTO
+   
     const fare = await this.FareRepo.findOne({ where: { id: Dto.fareId } });
     
     if (!fare) {
         throw new NotFoundException(`Fare with ID ${Dto.fareId} not found.`);
     }
     
-    // 3. Create the Booking entity, linking the fetched objects
+    
     const booking = this.BookingRepo.create({  
       ...Dto,
-      // Overwrite the IDs from DTO with the actual entity objects 
-      // to establish the database relationships
+    
       car: car,
       fare: fare, 
       Status:BookingStatus.Pending
@@ -98,14 +97,8 @@ export class BookingService {
     console.log(updateBookingDto.Status);
 
     if(updateBookingDto.Status===BookingStatus.Confirmed){
-     await this.MailService.SendBookingConfirmation(
-     booking.Email,
-     '"Car Booking App" <no-reply@yourdomain.com>',
-     {name:booking.Name,
-      pickup:booking.PickUpLocation,
-      drop:booking.DropLocation,
-      bookingId:booking.id
-     })
+     await this.mailService.sendBookingConfirmation(booking)
+    console.log("mail sent ")
     }
 
     return UpdatedBooking;
@@ -116,17 +109,34 @@ export class BookingService {
     return this.BookingRepo.delete(id);
   }
 
- async AssignCarDriver(bookingId: number, driverId: number) {
-  const booking = await this.BookingRepo.findOne({ where: { id: bookingId }, relations: ['car', 'fare'] });
-  if (!booking) throw new NotFoundException('Booking not found');
+async AssignCarDriver(bookingId: number, driverId: number) {
+  // 1. Fetch booking with all necessary relations for the email
+  const booking = await this.BookingRepo.findOne({ 
+    where: { id: bookingId }, 
+    relations: ['car', 'fare'] 
+  });
+  if (!booking) throw new NotFoundException('Booking not found');
 
-  const driver = await this.DriverRepo.findOneBy({ id: driverId });
-  if (!driver) throw new NotFoundException('Driver not found');
+  // 2. Find the driver
+  const driver = await this.DriverRepo.findOneBy({ id: driverId });
+  if (!driver) throw new NotFoundException('Driver not found');
 
-  booking.driver = driver;
-  return await this.BookingRepo.save(booking);
+  // 3. Assign and Save
+  booking.driver = driver;
+  booking.Status =BookingStatus.Confirmed; // Update status to confirmed
+  const savedBooking = await this.BookingRepo.save(booking);
+
+  // 4. Trigger the Email
+  try {
+    // Pass the savedBooking which now contains car, fare, and driver
+    await this.mailService.sendBookingConfirmation(savedBooking);
+    console.log("mail sent")
+  } catch (error) {
+    console.error("Email failed but booking was saved:", error);
+  }
+
+  return savedBooking;
 }
-
 
 // Fetch a booking with car, driver, fare
 async getBookingWithDetails(bookingId: number) {

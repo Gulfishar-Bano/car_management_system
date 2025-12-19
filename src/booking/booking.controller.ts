@@ -4,16 +4,16 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { UseInterceptors } from '@nestjs/common';
 import { SimpleInterceptor } from './logging.interceptor';
-import { MailService } from './mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
 import { ApiTags,ApiOperation,ApiResponse } from '@nestjs/swagger';
-
+import { MailService } from './mail/mail.service';
 
 @ApiTags('Booking')
 @Controller('booking')
 @UseInterceptors(SimpleInterceptor)
 export class BookingController {
   constructor(private readonly bookingService: BookingService,
-    private readonly mailService:MailService
+    
     ) {}
 
 
@@ -52,14 +52,7 @@ export class BookingController {
     return this.bookingService.AssignCarDriver(id,driverId)
   }
 
-  @Get('test-email')
-  async testEmail() {
-  return await this.mailService.SendBookingConfirmation(
-    'gulfisha9886@gmail.com',
-    '"Car Booking App" <no-reply@yourdomain.com>',
-    { name: 'Test', bookingId: 123, pickup: 'A', drop: 'B' }
-  );
-}
+ 
 
 
  @Get(':id/voucher')
