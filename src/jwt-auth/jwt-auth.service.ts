@@ -105,11 +105,11 @@ async updateRole(id: number, newRole: any) {
 async getDashboardStats() {
   const [totalUsers, totalBookings, totalFares] = await Promise.all([
     this.UserRepository.count(),
-    this.BookingRepo.count(), // Assuming you have this repository
+    this.BookingRepo.count(), 
     this.FareRepo.count(),
   ]);
 
-  // Unique: Get average markup from your Markup history
+
   const latestMarkup = await this.MarkupRepo.find({
     order: { createdAt: 'DESC' },
     take: 1

@@ -31,7 +31,7 @@ password:string
     }
 )role:UserRole
 
-@Column({ default: 'Active' }) // ADD THIS LINE
+@Column({ default: 'Active' }) 
   status: string;
 
 }

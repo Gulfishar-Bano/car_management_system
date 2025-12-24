@@ -6,16 +6,17 @@ import { Driver } from 'src/driver/driver.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Fare } from 'src/fare/fare.entity';
 import { Booking } from './entities/booking.entity';
-import { MailModule } from './mail/mail.module';
+import { MailService } from './mail/mail.service';
+
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car,Driver,Fare,Booking]),
-MailModule
+
 ],
   
   exports:[TypeOrmModule],
  
   controllers: [BookingController],
-  providers: [BookingService],
+  providers: [BookingService,MailService],
 })
 export class BookingModule {}
