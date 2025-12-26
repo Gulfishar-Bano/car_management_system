@@ -85,7 +85,6 @@ type Driver {
   id: Int!
   lastName: String!
   licence: String!
-  phone: Float!
   validity: DateTime!
 }
 

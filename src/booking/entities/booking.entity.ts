@@ -4,7 +4,7 @@ import { Car } from "src/car/car.entity";
 import { Driver } from "src/driver/driver.entity";
 import { Fare } from "src/fare/fare.entity";
 import { Entity } from "typeorm";
-
+import { JoinColumn } from "typeorm";
 
 
 export enum BookingStatus{
@@ -45,7 +45,11 @@ car:Car
 @ManyToOne(()=>Driver,driver=>driver.bookings,{eager:true,nullable:true})
 driver:Driver
 
-@ManyToOne(()=>Fare,fare=>fare.bookings,{eager:true,nullable:true})
-fare:Fare
 
+@ManyToOne(() => Fare, (fare) => fare.bookings, { 
+    onDelete: 'SET NULL', // This allows deletion of the fare
+    nullable: true 
+})
+@JoinColumn({ name: 'fareId' })
+fare: Fare;
 }

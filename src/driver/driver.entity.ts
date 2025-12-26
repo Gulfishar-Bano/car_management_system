@@ -34,9 +34,9 @@ export class Driver {
 validity: Date;
 
 
-@Field()
-  @Column()
-  phone : number;
+
+@Column({ type: 'varchar', length: 20, nullable: true })
+phone: string; 
 
   @Field(() => [Car], { nullable: true }) // Include related cars if needed
   @OneToMany(() => Car, (car) => car.driver)

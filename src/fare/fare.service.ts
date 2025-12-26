@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Fare } from './fare.entity';
@@ -32,12 +32,30 @@ export class FareService {
     return await this.FareRepository.save(fare);
   }
 
- async Update(id: number, dto: any): Promise<any> {
-    const fare= await this.findOne(id);
+async Update(id: number, dto: any): Promise<any> {
+ 
+    const fare = await this.FareRepository.findOne({ where: { id } });
+    if (!fare) throw new NotFoundException('Fare not found');
 
-    // If DTO is { isActive: false }, Object.assign updates *only* that field.
-    Object.assign(fare, dto); 
-    return this.FareRepository.save(fare);
+   
+    const { carId, ...otherData } = dto;
+
+    
+    Object.assign(fare, otherData);
+
+  
+    if (carId) {
+        
+        fare.car = { id: carId } as any; 
+    }
+
+    await this.FareRepository.save(fare);
+
+   
+    return this.FareRepository.findOne({
+        where: { id },
+        relations: ['car']
+    });
 }
 
  async findOne(id: number) {

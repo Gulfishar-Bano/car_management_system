@@ -109,10 +109,26 @@ async getDashboardStats() {
     this.FareRepo.count(),
   ]);
 
-
   const latestMarkup = await this.MarkupRepo.find({
-    order: { createdAt: 'DESC' },
+    order: { createdAt: 'DESC' }, // Assuming Markup table has this
     take: 1
+  });
+
+  // --- 1. Analytics for the Chart (Top Routes) ---
+  // We group by PickUpLocation and DropLocation as seen in your DB
+  const routeStats = await this.BookingRepo
+    .createQueryBuilder("booking")
+    .select("CONCAT(booking.PickUpLocation, ' → ', booking.DropLocation)", "name")
+    .addSelect("COUNT(booking.id)", "bookings")
+    .groupBy("booking.PickUpLocation, booking.DropLocation")
+    .orderBy("bookings", "DESC")
+    .limit(5)
+    .getRawMany();
+
+  // --- 2. Recent Activity Feed (Using your 'Date' column) ---
+  const recentActivities = await this.BookingRepo.find({
+    order: { Date: 'DESC' }, // Using 'Date' from your specific schema
+    take: 5
   });
 
   return {
@@ -120,8 +136,31 @@ async getDashboardStats() {
     bookings: totalBookings,
     fares: totalFares,
     currentMarkup: latestMarkup[0]?.value || 0,
-    systemStatus: 'Online'
+    systemStatus: 'Online',
+    routes: routeStats, // Now dynamically calculated from your DB
+    activities: recentActivities.map(booking => ({
+      id: booking.id,
+      text: `New booking for ${booking.PickUpLocation} by ${booking.Name}`, // Using 'Name'
+      time: this.formatTimeAgo(booking.Date), // Helper for the timestamp
+      type: 'booking'
+    }))
   };
 }
+
+formatTimeAgo(dateString) {
+  const now = new Date();
+  const past = new Date(dateString);
+  const diffInMs = now.getTime()- past.getTime();
+  const diffInMins = Math.floor(diffInMs / (1000 * 60));
+
+  if (diffInMins < 1) return "Just now";
+  if (diffInMins < 60) return `${diffInMins} mins ago`;
+  
+  const diffInHours = Math.floor(diffInMins / 60);
+  if (diffInHours < 24) return `${diffInHours} hours ago`;
+  
+  return past.toLocaleDateString(); // Fallback to date
+}
+
    
 }
