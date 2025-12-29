@@ -101,7 +101,7 @@ async toggleStatus(id: number) {
 async updateRole(id: number, newRole: any) {
   return this.UserRepository.update(id, { role: newRole });
 }
-
+// Inside your JwtAuthService
 async getDashboardStats() {
   const [totalUsers, totalBookings, totalFares] = await Promise.all([
     this.UserRepository.count(),
@@ -110,57 +110,53 @@ async getDashboardStats() {
   ]);
 
   const latestMarkup = await this.MarkupRepo.find({
-    order: { createdAt: 'DESC' }, // Assuming Markup table has this
+    order: { createdAt: 'DESC' },
     take: 1
   });
 
-  // --- 1. Analytics for the Chart (Top Routes) ---
-  // We group by PickUpLocation and DropLocation as seen in your DB
   const routeStats = await this.BookingRepo
     .createQueryBuilder("booking")
     .select("CONCAT(booking.PickUpLocation, ' → ', booking.DropLocation)", "name")
     .addSelect("COUNT(booking.id)", "bookings")
     .groupBy("booking.PickUpLocation, booking.DropLocation")
     .orderBy("bookings", "DESC")
-    .limit(5)
+    .limit(4)
     .getRawMany();
 
-  // --- 2. Recent Activity Feed (Using your 'Date' column) ---
-  const recentActivities = await this.BookingRepo.find({
-    order: { Date: 'DESC' }, // Using 'Date' from your specific schema
-    take: 5
+  const recentBookings = await this.BookingRepo.find({
+    order: { Date: 'DESC' }, // Sorted by your 'Date' column
+    take: 3
   });
 
   return {
-    users: totalUsers,
-    bookings: totalBookings,
-    fares: totalFares,
-    currentMarkup: latestMarkup[0]?.value || 0,
     systemStatus: 'Online',
-    routes: routeStats, // Now dynamically calculated from your DB
-    activities: recentActivities.map(booking => ({
-      id: booking.id,
-      text: `New booking for ${booking.PickUpLocation} by ${booking.Name}`, // Using 'Name'
-      time: this.formatTimeAgo(booking.Date), // Helper for the timestamp
-      type: 'booking'
+    stats: [
+      { label: 'Total Users', value: totalUsers, icon: '👥', color: '#4f46e5' },
+      { label: 'Total Bookings', value: totalBookings, icon: '📅', color: '#10b981' },
+      { label: 'Active Markup', value: `${latestMarkup[0]?.value || 0}%`, icon: '💰', color: '#f59e0b' }
+    ],
+    routes: routeStats,
+    activities: recentBookings.map(b => ({
+      id: b.id,
+      type: 'booking',
+      text: `New booking: ${b.PickUpLocation} → ${b.DropLocation} by ${b.Name}`,
+      time: this.formatTimeAgo(b.Date.toISOString())
     }))
   };
 }
 
-formatTimeAgo(dateString) {
+formatTimeAgo(dateString: string) {
   const now = new Date();
   const past = new Date(dateString);
-  const diffInMs = now.getTime()- past.getTime();
+  // Using .getTime() to fix the TypeScript arithmetic error
+  const diffInMs = now.getTime() - past.getTime();
   const diffInMins = Math.floor(diffInMs / (1000 * 60));
 
   if (diffInMins < 1) return "Just now";
   if (diffInMins < 60) return `${diffInMins} mins ago`;
-  
-  const diffInHours = Math.floor(diffInMins / 60);
-  if (diffInHours < 24) return `${diffInHours} hours ago`;
-  
-  return past.toLocaleDateString(); // Fallback to date
+  return past.toLocaleDateString();
 }
+
 
    
 }
