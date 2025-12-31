@@ -142,7 +142,9 @@ async AssignCarDriver(bookingId: number, driverId: number) {
 async getBookingWithDetails(bookingId: number) {
   const booking = await this.BookingRepo.findOne({
     where: { id: bookingId },
+relations: ['car', 'driver', 'fare'],
   });
+console.log("booking",booking)
 
   if (!booking) {
     throw new NotFoundException(`Booking with ID ${bookingId} not found`);

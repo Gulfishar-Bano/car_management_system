@@ -9,7 +9,7 @@ import { join } from 'path';
     MailerModule.forRoot({
       transport: {
        host: 'smtp.gmail.com',
-    port: 465, // Recommended for Gmail
+    port: 465, 
     secure: true,
         auth: {
           user: 'gulfishar.provab@gmail.com',
@@ -20,7 +20,7 @@ import { join } from 'path';
         from: '"Carisma Rentals" <no-reply@yourdomain.com>',
       },
       template: {
-        dir: join(__dirname, 'templates'), // Where your HTML files will live
+        dir: join(__dirname, 'templates'), 
         adapter: new HandlebarsAdapter(), 
         options: {
           strict: false,
