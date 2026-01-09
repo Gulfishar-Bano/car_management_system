@@ -21,6 +21,7 @@ import { MailModule } from './booking/mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { RealtimeModule } from './realtime/realtime.module';
 import { AiModule } from './ai.module';
+import { PaymentModule } from './Payment/payment.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -65,7 +66,9 @@ import { AiModule } from './ai.module';
     BookingModule,
     MailModule,
     RealtimeModule,
-    AiModule
+    AiModule,
+    PaymentModule
+
   ],
   providers: [CarBrandResolver],
 })
