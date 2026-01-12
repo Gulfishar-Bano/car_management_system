@@ -7,9 +7,10 @@ import { Car } from 'src/car/car.entity';
 import { CarModule } from 'src/car/car.module';
 import { MarkupModule } from 'src/markup/markup.module';
 import { FareResolver } from './fare.resolver';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-imports:[TypeOrmModule.forFeature([Fare,Car]),CarModule,MarkupModule],
+imports:[TypeOrmModule.forFeature([Fare,Car]),CacheModule.register(),CarModule,MarkupModule],
 controllers:[FareController],
 providers:[FareService, FareResolver],
 exports: [TypeOrmModule]

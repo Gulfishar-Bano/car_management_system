@@ -24,6 +24,12 @@ export class BookingController {
     return this.bookingService.create(createBookingDto);
   }
 
+@Get('user/:email') 
+findUserBookings(@Param('email') email: string) {
+  console.log("Backend received email:", email); // This will help you debug
+  return this.bookingService.findByUser(email);
+}
+
   @ApiOperation({summary:"List of Bookings"})
   @ApiResponse({status:201,description:"List of Bookings"})
   @Get('list')
@@ -31,6 +37,7 @@ export class BookingController {
     return this.bookingService.findAll();
   }
 
+ 
   
   @Get('list/:id')
   findOne(@Param('id') id: string) {

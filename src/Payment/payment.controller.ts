@@ -22,7 +22,7 @@ export class PaymentController {
     const isValid = await this.paymentService.verifyPayment(paymentId, orderId, signature);
     
     if (isValid) {
-      // Here is where you would update your Database (e.g., mark order as paid)
+    
       return { status: 'success', message: 'Mock Payment Verified Successfully' };
     } else {
       throw new BadRequestException('Invalid mock payment signature');

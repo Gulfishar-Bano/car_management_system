@@ -52,6 +52,13 @@ export class BookingService {
   }
   
 
+async findByUser(email: string) {
+  return await this.BookingRepo.find({ 
+    where: { Email: email } ,
+    relations: ['fare', 'car', 'driver']
+  });
+}
+
   findAll() {
     return this.BookingRepo.find({relations:["car"]});
   }
@@ -110,7 +117,7 @@ export class BookingService {
   }
 
 async AssignCarDriver(bookingId: number, driverId: number) {
-  // 1. Fetch booking with all necessary relations for the email
+ 
   const booking = await this.BookingRepo.findOne({ 
     where: { id: bookingId }, 
     relations: ['car', 'fare'] 

@@ -6,6 +6,9 @@ import { Car } from 'src/car/car.entity';
 import { CreateFare } from './dto/create-fare.dto';
 import { UpdateFare } from './dto/update-fare.dto';
 import { MarkupService } from 'src/markup/markup.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject } from '@nestjs/common';
+import { Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class FareService {
@@ -17,6 +20,7 @@ export class FareService {
     private readonly CarRepository: Repository<Car>,
 
     private readonly MarkUpService: MarkupService,
+   private readonly cacheManager: Cache, 
   ) {}
 
   async create(dto: CreateFare) :Promise<Fare>{
@@ -71,6 +75,7 @@ async Update(id: number, dto: any): Promise<any> {
 
   async findAll():Promise<any[]> {
     const fares = await this.FareRepository.find({ relations: ['car'] });
+    
     const markup = await this.MarkUpService.getCurrentMarkup(); // { type, value }
 
     return fares.map((fare) => {
@@ -112,29 +117,50 @@ async Update(id: number, dto: any): Promise<any> {
     });
   }
 
-  async findByLocation(fromLoc: string, toLoc: string) {
-    const result = await this.FareRepository.find({
-      where: { FromLocation: fromLoc, ToLocation: toLoc },
-      relations: ['car'],
-    });
+ async findByLocation(fromLoc: string, toLoc: string) {
+  const cacheKey = `fare:${fromLoc}:${toLoc}`;
 
-    if (!result || result.length === 0)
-      throw new BadRequestException('Fare not found for that location');
-
-    const markup = await this.MarkUpService.getCurrentMarkup();
-
-    return result.map((fare) => {
-      const markupValue = this.calculateMarkup(fare.fare, markup.type, markup.value);
-      const finalFare = Number(fare.fare) + markupValue;
-
-      return {
-        ...fare,
-        markupType: markup.type,
-        markupValue,
-        finalFare,
-      };
-    });
+  // 1. Try to get data from Redis
+  const cachedData = await this.cacheManager.get<any[]>(cacheKey);
+  if (cachedData) {
+    console.log('🚀 Redis HIT');
+    return cachedData; // Returns the array directly, same as findByAmount
   }
+
+  console.log('❌ Redis MISS — Fetching from DB');
+
+  const result = await this.FareRepository.find({
+    where: { FromLocation: fromLoc, ToLocation: toLoc },
+    relations: ['car'],
+  });
+
+  if (!result || result.length === 0)
+    throw new BadRequestException('Fare not found for that location');
+
+  const markup = await this.MarkUpService.getCurrentMarkup();
+
+  // 2. Transform the data
+  const response = result.map((fare) => {
+    const markupValue = this.calculateMarkup(
+      fare.fare,
+      markup.type,
+      markup.value,
+    );
+
+    return {
+      ...fare,
+      markupType: markup.type,
+      markupValue,
+      finalFare: Number(fare.fare) + markupValue,
+    };
+  });
+
+  // 3. Store the array directly in Redis
+  // Note: Using 600000ms (10 mins) depending on your cache-manager version
+  await this.cacheManager.set(cacheKey, response, 600000); 
+
+  return response; // Returns the exact same structure as findByAmount
+}
 
   async delete(id: number):Promise<string> {
     const fare = await this.FareRepository.findOneBy({ id });

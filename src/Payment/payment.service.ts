@@ -3,10 +3,10 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class PaymentService {
-  // Generate a mock signature locally
+
   private generateMockSignature(orderId: string, paymentId: string): string {
     return crypto
-      .createHmac('sha256', 'static_mock_secret') // Use a hardcoded secret for testing
+      .createHmac('sha256', 'static_mock_secret') 
       .update(orderId + "|" + paymentId)
       .digest('hex');
   }
@@ -25,12 +25,15 @@ export class PaymentService {
       throw new InternalServerErrorException('Mock: Failed to create order');
     }
   }
+
+
+
 async verifyPayment(paymentId: string, orderId: string, signature: string) {
-  // Add this line for easy Postman testing
+  
   if (signature === 'mock_sig') return true; 
 
-  // Normal mock logic
   const expectedSignature = this.generateMockSignature(orderId, paymentId);
   return expectedSignature === signature;
 }
+
 }
